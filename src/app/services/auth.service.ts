@@ -41,9 +41,7 @@ export interface AuthResponse {
   tokens: AuthTokens;
 }
 
-/** Server response when a 2FA-enabled user logs in. The frontend then has to
- *  POST `{ challenge_id, code }` to `/api/auth/2fa/verify/` to get tokens.
- *  Delivery channel is EMAIL — `masked_email` is e.g. `co***05@gmail.com`. */
+
 export interface OtpChallengeResponse {
   requires_otp: true;
   challenge_id: string;
@@ -58,9 +56,7 @@ export function isOtpChallenge(r: LoginResult): r is OtpChallengeResponse {
   return (r as OtpChallengeResponse).requires_otp === true;
 }
 
-/** Server response when a fresh account is registered. NO JWT is returned —
- *  the frontend must call verifyRegistration() with the emailed OTP code
- *  before the user can log in. */
+
 export interface RegisterResponse {
   message:       string;
   requires_otp:  true;
@@ -76,12 +72,12 @@ export interface RegisterVerifyResponse {
   verified: boolean;
 }
 
-// ── Token Keys ────────────────────────────────────────────────────────────────
+//  Token Keys 
 
 const ACCESS_KEY  = 'elite_access';
 const REFRESH_KEY = 'elite_refresh';
 
-// ── Service ───────────────────────────────────────────────────────────────────
+//  Service 
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -94,15 +90,12 @@ export class AuthService {
     private notifications: NotificationService,
   ) {}
 
-  // Registration — POST /api/auth/register/
-  // Returns NO JWT. Caller must follow with verifyRegistration() using the
-  // OTP code that was emailed to the user.
+
   register(payload: RegisterPayload): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.api}/api/auth/register/`, payload);
   }
 
-  // Step 2 of registration — POST /api/auth/register/verify/
-  // Confirms email ownership. After success, the user can log in normally.
+
   verifyRegistration(challenge_id: string, code: string): Observable<RegisterVerifyResponse> {
     return this.http.post<RegisterVerifyResponse>(
       `${this.api}/api/auth/register/verify/`,
@@ -118,9 +111,7 @@ export class AuthService {
     );
   }
 
-  // Login — POST /api/auth/login/
-  // May return either AuthResponse (immediate JWT) or OtpChallengeResponse
-  // (2FA enabled — caller must follow with verifyOtp()).
+
   login(payload: LoginPayload): Observable<LoginResult> {
     return this.http.post<LoginResult>(`${this.api}/api/auth/login/`, payload)
       .pipe(tap(res => {
@@ -128,7 +119,6 @@ export class AuthService {
       }));
   }
 
-  // Step 2 of 2FA login — POST /api/auth/2fa/verify/
   verifyOtp(challenge_id: string, code: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.api}/api/auth/2fa/verify/`,
         { challenge_id, code })
@@ -148,10 +138,7 @@ export class AuthService {
       .pipe(tap(res => localStorage.setItem(ACCESS_KEY, res.access)));
   }
 
-  // ── Password reset ────────────────────────────────────────────────────────
-
-  /** Step 1: ask the server to email a reset link. Always succeeds (won't
-   *  reveal whether the email exists). */
+  //  Password reset 
   requestPasswordReset(email: string): Observable<{ detail: string }> {
     return this.http.post<{ detail: string }>(
       `${this.api}/api/auth/password-reset/request/`,
