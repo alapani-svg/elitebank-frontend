@@ -4,7 +4,7 @@ import { TimeoutError, throwError } from 'rxjs';
 
 export const httpTimeoutInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
-    timeout(1800),
+    timeout(30000),
     catchError(err => {
       if (err instanceof TimeoutError) {
         return throwError(() => ({
