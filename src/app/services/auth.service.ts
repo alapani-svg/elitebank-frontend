@@ -41,38 +41,7 @@ export interface AuthResponse {
   tokens: AuthTokens;
 }
 
-
-export interface OtpChallengeResponse {
-  requires_otp: true;
-  challenge_id: string;
-  masked_email: string;
-  email: string;
-  message: string;
-}
-
-export type LoginResult = AuthResponse | OtpChallengeResponse;
-
-export function isOtpChallenge(r: LoginResult): r is OtpChallengeResponse {
-  return (r as OtpChallengeResponse).requires_otp === true;
-}
-
-
-export interface RegisterResponse {
-  message:       string;
-  requires_otp:  true;
-  purpose:       'register';
-  challenge_id:  string;
-  masked_email:  string;
-  email:         string;
-}
-
-export interface RegisterVerifyResponse {
-  message:  string;
-  email:    string;
-  verified: boolean;
-}
-
-//  Token Keys 
+//  Token Keys
 
 const ACCESS_KEY  = 'elite_access';
 const REFRESH_KEY = 'elite_refresh';
@@ -91,44 +60,14 @@ export class AuthService {
   ) {}
 
 
-  register(payload: RegisterPayload): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.api}/api/auth/register/`, payload);
-  }
-
-
-  verifyRegistration(challenge_id: string, code: string): Observable<RegisterVerifyResponse> {
-    return this.http.post<RegisterVerifyResponse>(
-      `${this.api}/api/auth/register/verify/`,
-      { challenge_id, code },
-    );
-  }
-
-  // Re-send a fresh registration OTP — POST /api/auth/register/resend/
-  resendRegistrationOtp(email: string): Observable<{ message: string; challenge_id: string; masked_email: string }> {
-    return this.http.post<{ message: string; challenge_id: string; masked_email: string }>(
-      `${this.api}/api/auth/register/resend/`,
-      { email },
-    );
-  }
-
-
-  login(payload: LoginPayload): Observable<LoginResult> {
-    return this.http.post<LoginResult>(`${this.api}/api/auth/login/`, payload)
-      .pipe(tap(res => {
-        if (!isOtpChallenge(res)) this.storeTokens(res.tokens);
-      }));
-  }
-
-  verifyOtp(challenge_id: string, code: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.api}/api/auth/2fa/verify/`,
-        { challenge_id, code })
+  register(payload: RegisterPayload): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.api}/api/auth/register/`, payload)
       .pipe(tap(res => this.storeTokens(res.tokens)));
   }
 
-  // Re-send a fresh OTP — POST /api/auth/2fa/resend/
-  resendOtp(challenge_id: string): Observable<{ challenge_id: string; masked_email: string; message: string }> {
-    return this.http.post<{ challenge_id: string; masked_email: string; message: string }>(
-      `${this.api}/api/auth/2fa/resend/`, { challenge_id });
+  login(payload: LoginPayload): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.api}/api/auth/login/`, payload)
+      .pipe(tap(res => this.storeTokens(res.tokens)));
   }
 
   // Refresh — POST /api/auth/token/refresh/

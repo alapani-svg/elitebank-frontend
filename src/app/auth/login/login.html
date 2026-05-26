@@ -35,13 +35,13 @@
     </div>
 
     <!-- Server error banner -->
-    <div class="alert-error" *ngIf="serverError && !otpChallengeId" role="alert">
+    <div class="alert-error" *ngIf="serverError" role="alert">
       <span class="material-symbols-outlined">warning</span>
       <span>{{ serverError }}</span>
     </div>
 
-    <!-- Login Form (Step 1) -->
-    <form *ngIf="!otpChallengeId" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
 
       <!-- Email / Phone -->
       <div class="field" [class.field--error]="f['email'].invalid && f['email'].touched">
@@ -106,70 +106,8 @@
 
     </form>
 
-    <!-- OTP Panel (Step 2 — shown when 2FA is enabled on the account) -->
-    <div *ngIf="otpChallengeId" class="otp-panel">
-      <div class="otp-head">
-        <div class="otp-shield">
-          <span class="material-symbols-outlined">mark_email_read</span>
-        </div>
-        <h2>Two-Factor Verification</h2>
-        <p>
-          We emailed a 6-digit code to
-          <strong>{{ otpMaskedEmail || otpEmail }}</strong>.
-          Check your inbox and enter the code below to finish signing in.
-        </p>
-      </div>
-
-      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" novalidate>
-
-        <div class="field" [class.field--error]="of['code'].invalid && of['code'].touched">
-          <label class="field-label" for="otp-code">VERIFICATION CODE</label>
-          <div class="input-wrap">
-            <span class="material-symbols-outlined input-icon">key</span>
-            <input id="otp-code"
-                   type="text"
-                   inputmode="numeric"
-                   autocomplete="one-time-code"
-                   maxlength="6"
-                   placeholder="123456"
-                   formControlName="code"
-                   class="otp-input">
-          </div>
-          <div class="field-err" *ngIf="of['code'].invalid && of['code'].touched">
-            <span *ngIf="of['code'].errors?.['required']">Enter the 6-digit code.</span>
-            <span *ngIf="of['code'].errors?.['pattern']">Code must be exactly 6 digits.</span>
-          </div>
-        </div>
-
-        <div class="alert-error" *ngIf="otpError" role="alert">
-          <span class="material-symbols-outlined">warning</span>
-          <span>{{ otpError }}</span>
-        </div>
-
-        <button type="submit" class="submit-btn"
-                [disabled]="otpForm.invalid || otpLoading">
-          <ng-container *ngIf="!otpLoading">Verify &amp; Sign In</ng-container>
-          <ng-container *ngIf="otpLoading">
-            <span class="spinner"></span> Verifying…
-          </ng-container>
-        </button>
-
-        <div class="otp-actions">
-          <button type="button" class="link-btn" (click)="cancelOtp()">
-            <span class="material-symbols-outlined">arrow_back</span> Use a different account
-          </button>
-          <button type="button" class="link-btn"
-                  [disabled]="resendCooldown > 0"
-                  (click)="resendOtp()">
-            <span *ngIf="resendCooldown === 0">Resend code</span>
-            <span *ngIf="resendCooldown > 0">Resend in {{ resendCooldown }}s</span>
-          </button>
-        </div>
-      </form>
-    </div>
-
     <!-- Divider + Register link -->
-    <div class="card-footer" *ngIf="!otpChallengeId">
+    <div class="card-footer">
       <p>Don't have an account? <a routerLink="/register">Register</a></p>
     </div>
 
