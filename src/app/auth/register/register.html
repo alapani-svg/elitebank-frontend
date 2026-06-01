@@ -22,24 +22,86 @@
   <div class="register-card">
 
     <!-- Back -->
-    <button class="back-btn" routerLink="/">
+    <button class="back-btn" routerLink="/" *ngIf="!challengeId">
       <span class="material-symbols-outlined">arrow_back</span> Back
     </button>
 
     <!-- Header -->
     <div class="card-header">
-      <h1>Join the Elite</h1>
-      <p>Secure your financial legacy in Cameroon's digital age.</p>
+      <h1 *ngIf="!challengeId">Join the Elite</h1>
+      <h1 *ngIf="challengeId">Verify your email</h1>
+      <p *ngIf="!challengeId">Secure your financial legacy in Cameroon's digital age.</p>
+      <p *ngIf="challengeId">
+        We've sent a 6-digit code to <strong>{{ maskedEmail || registeredEmail }}</strong>.
+        Enter it below to activate your account.
+      </p>
     </div>
 
-    <!-- Server error -->
-    <div class="alert-error" *ngIf="serverError" role="alert">
+    <!-- Server error (Step 1) -->
+    <div class="alert-error" *ngIf="serverError && !challengeId" role="alert">
       <span class="material-symbols-outlined">warning</span>
       <span>{{ serverError }}</span>
     </div>
 
-    <!-- Signup form -->
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+    <!-- ════════════ STEP 2 — OTP verification ════════════ -->
+    <div class="otp-panel" *ngIf="challengeId">
+      <div class="otp-head">
+        <div class="otp-shield">
+          <span class="material-symbols-outlined">mark_email_read</span>
+        </div>
+      </div>
+
+      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" novalidate>
+
+        <div class="field" [class.field--error]="of['code'].invalid && of['code'].touched">
+          <label class="field-label" for="reg-otp-code">VERIFICATION CODE</label>
+          <div class="input-wrap">
+            <span class="material-symbols-outlined input-icon">key</span>
+            <input id="reg-otp-code"
+                   type="text"
+                   inputmode="numeric"
+                   autocomplete="one-time-code"
+                   maxlength="6"
+                   placeholder="123456"
+                   formControlName="code"
+                   class="otp-input">
+          </div>
+          <div class="field-err" *ngIf="of['code'].invalid && of['code'].touched">
+            <span *ngIf="of['code'].errors?.['required']">Enter the 6-digit code.</span>
+            <span *ngIf="of['code'].errors?.['pattern']">Code must be exactly 6 digits.</span>
+          </div>
+        </div>
+
+        <div class="alert-error" *ngIf="otpError" role="alert">
+          <span class="material-symbols-outlined">warning</span>
+          <span>{{ otpError }}</span>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="otpForm.invalid || otpLoading">
+          <ng-container *ngIf="!otpLoading">
+            Verify &amp; Continue <span class="material-symbols-outlined">arrow_forward</span>
+          </ng-container>
+          <ng-container *ngIf="otpLoading">
+            <span class="spinner"></span> Verifying…
+          </ng-container>
+        </button>
+
+        <div class="otp-actions">
+          <button type="button" class="link-btn" (click)="cancelOtp()">
+            <span class="material-symbols-outlined">arrow_back</span> Use a different account
+          </button>
+          <button type="button" class="link-btn"
+                  [disabled]="resendCooldown > 0 || otpLoading"
+                  (click)="resendOtp()">
+            <span *ngIf="resendCooldown === 0">Resend code</span>
+            <span *ngIf="resendCooldown > 0">Resend in {{ resendCooldown }}s</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ════════════ STEP 1 — signup form ════════════ -->
+    <form *ngIf="!challengeId" [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
 
       <!-- Full Name -->
       <div class="field" [class.field--error]="f['full_name'].invalid && f['full_name'].touched">
@@ -140,7 +202,7 @@
 
     </form>
 
-    <div class="card-footer">
+    <div class="card-footer" *ngIf="!challengeId">
       <p>Already have an account? <a routerLink="/login">Login</a></p>
     </div>
 
