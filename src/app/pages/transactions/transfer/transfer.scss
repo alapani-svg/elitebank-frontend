@@ -166,37 +166,31 @@ $green:     #4CAF8A;
 
   @media (min-width: 1000px) {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-    grid-auto-flow: row dense;
+
+    /* Default every direct child to the left (form) column so any
+       section labels, alerts, or extra form blocks stay with the
+       form on the left. */
+    > * { grid-column: 1; }
+
+    /* Header + alerts span both columns. */
+    .transfer-header,
+    .alert-error,
+    .alert-success { grid-column: 1 / -1; }
+
+    /* Right column: balance pinned at row 2 sticky; save prompt and
+       saved-beneficiaries chip strip stack underneath in col 2. */
+    .balance-card {
+      grid-column: 2; grid-row: 2;
+      position: sticky;
+      top: 1rem;
+      align-self: start;
+      margin-bottom: 0;
+    }
+    .save-beneficiary-card { grid-column: 2; align-self: start; margin-bottom: 0; }
+    .beneficiary-strip     { grid-column: 2; align-self: start; margin-bottom: 0; }
   }
 
   @media (max-width: 600px) { padding: 1.5rem 1rem 3rem; }
-}
-
-/* Header + alerts span both columns on desktop, full width on mobile */
-.transfer-header,
-.alert-error,
-.alert-success {
-  grid-column: 1 / -1;
-}
-
-@media (min-width: 1000px) {
-  /* Form anchored to col-1 starting at row 2 (just below header).
-     grid-row: 2 makes it slide up next to the balance card so both
-     columns start at the same Y. */
-  .transfer-form { grid-column: 1; grid-row: 2; align-self: start; }
-
-  /* Right column: balance pinned to top, sticky so it stays in view
-     while the user scrolls through the form. Save prompt and
-     beneficiaries stack underneath, also in col 2. */
-  .balance-card {
-    grid-column: 2; grid-row: 2;
-    align-self: start;
-    position: sticky;
-    top: 1rem;
-    margin-bottom: 0;
-  }
-  .save-beneficiary-card { grid-column: 2; grid-row: 3; align-self: start; margin-bottom: 0; }
-  .beneficiary-strip     { grid-column: 2; grid-row: 4; align-self: start; margin-bottom: 0; }
 }
 
 /* Header */

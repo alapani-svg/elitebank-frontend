@@ -164,33 +164,30 @@ $mtn-yel:   #FFC300;
 
   @media (min-width: 1000px) {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-    grid-auto-flow: row dense;
+
+    /* Default every direct child to the left (form) column. The
+       ng-container in deposit.html doesn't render an element, so
+       section-label / provider-grid / deposit-form are all direct
+       children of .deposit-page and need to land on the left. */
+    > * { grid-column: 1; }
+
+    /* Header and state-card (success/processing) span both columns. */
+    .deposit-header,
+    .state-card { grid-column: 1 / -1; }
+
+    /* Balance card lives in the right column, anchored to row 2 and
+       sticky so it stays visible as the form scrolls. */
+    .balance-card {
+      grid-column: 2;
+      grid-row: 2;
+      position: sticky;
+      top: 1rem;
+      align-self: start;
+      margin-bottom: 0;
+    }
   }
 
   @media (max-width: 600px) { padding: 1.5rem 1rem 4rem; }
-}
-
-/* Header full-width on top. State card (success/processing) also full width. */
-.deposit-header,
-.state-card {
-  grid-column: 1 / -1;
-}
-
-@media (min-width: 1000px) {
-  /* Form sits in col 1 row 2; balance card pins to col 2 row 2 sticky
-     so both columns start at the same Y under the header and the
-     balance stays visible as the user scrolls. */
-  .deposit-form {
-    grid-column: 1; grid-row: 2;
-    align-self: start;
-  }
-  .balance-card {
-    grid-column: 2; grid-row: 2;
-    align-self: start;
-    position: sticky;
-    top: 1rem;
-    margin-bottom: 0;
-  }
 }
 
 .deposit-header {
