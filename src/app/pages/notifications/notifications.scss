@@ -117,10 +117,11 @@ $error:      #E05252;
 
 // ── Notifications page ────────────────────────────────────────────────────────
 .notif-page {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  width: 100%;
+  padding: 2rem 2rem 4rem;
   box-sizing: border-box;
+
+  @media (max-width: 600px) { padding: 1.25rem 1rem 3rem; }
 }
 
 .page-header {
