@@ -125,16 +125,36 @@ $mtn-yel:   #FFC300;
 
 // ── Withdraw page ─────────────────────────────────────────────────────────────
 .withdraw-page {
-  max-width: 720px;
-  margin: 0 auto;
+  width: 100%;
   padding: 2.5rem 2rem 5rem;
   box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  row-gap: 1.25rem;
+  align-items: start;
+
+  @media (min-width: 1000px) {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  }
 
   @media (max-width: 600px) { padding: 1.5rem 1rem 4rem; }
 }
 
+/* Header full-width on top; on desktop form sits left, balance card right.
+   State card (success/processing) takes full width when shown. */
+.withdraw-header,
+.state-card {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1000px) {
+  .withdraw-form { grid-column: 1; }
+  .balance-card { grid-column: 2; margin-bottom: 0; }
+}
+
 .withdraw-header {
-  display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem;
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 0;
 }
 
 .back-btn {

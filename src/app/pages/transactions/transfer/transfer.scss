@@ -155,17 +155,39 @@ $green:     #4CAF8A;
 .page-content { flex: 1; overflow-y: auto; }
 
 .transfer-page {
-  max-width: 720px;
-  margin: 0 auto;
+  width: 100%;
   padding: 2.5rem 2rem 4rem;
   box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  row-gap: 1.25rem;
+  align-items: start;
+
+  @media (min-width: 1000px) {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  }
 
   @media (max-width: 600px) { padding: 1.5rem 1rem 3rem; }
 }
 
+/* On desktop: header full-width, form left, balance/save/beneficiaries right */
+.transfer-header,
+.alert-error,
+.alert-success {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1000px) {
+  .transfer-form { grid-column: 1; grid-row: span 4; }
+  .balance-card,
+  .save-beneficiary-card,
+  .beneficiary-strip { grid-column: 2; margin-bottom: 0; }
+}
+
 /* Header */
 .transfer-header {
-  display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 0;
 }
 
 .back-btn {
