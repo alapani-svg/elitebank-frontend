@@ -164,21 +164,33 @@ $mtn-yel:   #FFC300;
 
   @media (min-width: 1000px) {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    grid-auto-flow: row dense;
   }
 
   @media (max-width: 600px) { padding: 1.5rem 1rem 4rem; }
 }
 
-/* Header full-width on top; on desktop form sits left, balance card right.
-   State card (success/processing) takes full width when shown. */
+/* Header full-width on top. State card (success/processing) also full width. */
 .deposit-header,
 .state-card {
   grid-column: 1 / -1;
 }
 
 @media (min-width: 1000px) {
-  .deposit-form { grid-column: 1; }
-  .balance-card { grid-column: 2; margin-bottom: 0; }
+  /* Form sits in col 1 row 2; balance card pins to col 2 row 2 sticky
+     so both columns start at the same Y under the header and the
+     balance stays visible as the user scrolls. */
+  .deposit-form {
+    grid-column: 1; grid-row: 2;
+    align-self: start;
+  }
+  .balance-card {
+    grid-column: 2; grid-row: 2;
+    align-self: start;
+    position: sticky;
+    top: 1rem;
+    margin-bottom: 0;
+  }
 }
 
 .deposit-header {
