@@ -105,21 +105,29 @@ export class AuthService {
       .pipe(tap(res => localStorage.setItem(ACCESS_KEY, res.access)));
   }
 
-  //  Password reset 
-  requestPasswordReset(email: string): Observable<{ detail: string }> {
-    return this.http.post<{ detail: string }>(
+  /** Step 1: ask the backend to email a 6-digit OTP. */
+  requestPasswordReset(email: string): Observable<{ message: string; challenge_id: string; masked_email: string; email: string }> {
+    return this.http.post<{ message: string; challenge_id: string; masked_email: string; email: string }>(
       `${this.api}/api/auth/password-reset/request/`,
       { email },
     );
   }
 
-  /** Step 2: submit the signed token + the new password. */
+  /** Step 2: submit the OTP. On success a short-lived reset_token is returned. */
+  verifyPasswordResetOtp(challenge_id: string, code: string): Observable<{ message: string; reset_token: string; verified: boolean }> {
+    return this.http.post<{ message: string; reset_token: string; verified: boolean }>(
+      `${this.api}/api/auth/password-reset/verify-otp/`,
+      { challenge_id, code },
+    );
+  }
+
+  /** Step 3: submit the reset_token + the new password. */
   confirmPasswordReset(
-    token: string, new_password: string, confirm_password: string,
+    reset_token: string, new_password: string, confirm_password: string,
   ): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(
       `${this.api}/api/auth/password-reset/confirm/`,
-      { token, new_password, confirm_password },
+      { reset_token, new_password, confirm_password },
     );
   }
 
