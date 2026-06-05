@@ -77,12 +77,14 @@ export class AuthService {
     return this.http.post<RegisterOtpResponse>(`${this.api}/api/auth/register/`, payload);
   }
 
-  /** Step 2: verify the OTP code. On success, JWT tokens are issued. */
+  /** Step 2: verify the OTP code. Backend marks the user verified and
+   *  returns tokens for convenience, but we deliberately DO NOT store
+   *  them — the user goes to /login and signs in with their credentials. */
   verifyRegistration(challenge_id: string, code: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
       `${this.api}/api/auth/register/verify/`,
       { challenge_id, code },
-    ).pipe(tap(res => this.storeTokens(res.tokens)));
+    );
   }
 
   /** Re-send a fresh OTP if the first one expired or was lost. */

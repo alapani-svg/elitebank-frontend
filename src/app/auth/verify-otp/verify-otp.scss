@@ -1,0 +1,206 @@
+@use 'sass:color';
+
+$gold:     #D4AF37;
+$gold-dim: #f2ca50;
+$dark:     #12110F;
+$card-bg:  #1E1C19;
+$input-bg: #12110F;
+$border:   rgba(#D4AF37, 0.18);
+$text:     #e8e2d7;
+$muted:    #d0c5af;
+$outline:  #99907c;
+$error:    #E05252;
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: $dark;
+  color: $text;
+  font-family: 'Manrope', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.bokeh-bg {
+  position: fixed; inset: 0;
+  background-image: radial-gradient(circle at 18% 25%, rgba($gold, 0.06) 0, transparent 38%),
+                    radial-gradient(circle at 82% 80%, rgba($gold, 0.05) 0, transparent 35%);
+  pointer-events: none; z-index: 0;
+}
+
+.top-bar {
+  position: fixed; top: 0; left: 0; right: 0; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; z-index: 50;
+  background: rgba($dark, 0.78); backdrop-filter: blur(10px);
+  border-bottom: 1px solid $border;
+}
+.brand {
+  font-size: 20px; font-weight: 900; color: $gold;
+  letter-spacing: -0.02em; text-decoration: none;
+}
+.top-icons { display: flex; gap: 8px; }
+.icon-btn-link {
+  display: inline-flex; align-items: center;
+  padding: 8px 16px;
+  background: rgba($gold, 0.12);
+  border: 1px solid rgba($gold, 0.35);
+  border-radius: 20px;
+  color: $gold; text-decoration: none;
+  font-size: 13px; font-weight: 700; letter-spacing: .04em;
+  transition: all .2s;
+  &:hover { background: $gold; color: $dark; transform: translateY(-1px); }
+}
+
+.verify-page {
+  min-height: 100vh;
+  padding: 96px 16px 48px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+
+.blob {
+  position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0;
+  &.blob-1 { width: 320px; height: 320px; background: rgba($gold, .12); top: 8%; left: -60px; }
+  &.blob-2 { width: 280px; height: 280px; background: rgba($gold, .08); bottom: 6%; right: -40px; }
+}
+
+.verify-card {
+  width: 100%; max-width: 460px;
+  background: $card-bg; border: 1px solid $border;
+  border-radius: 18px; padding: 2.25rem 2rem 2rem;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,.7);
+  position: relative; z-index: 1;
+  animation: card-in .35s ease-out;
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.shield-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba($gold, .12); border: 1px solid rgba($gold, .35);
+  color: $gold;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin: 0 auto .75rem;
+  .material-symbols-outlined { font-size: 26px; }
+}
+h1 {
+  font-size: 1.4rem; font-weight: 800; color: $text;
+  margin: 0 0 .35rem; letter-spacing: -0.02em;
+}
+.sub {
+  font-size: .88rem; color: $muted; line-height: 1.55; margin: 0;
+  strong { color: $gold-dim; font-weight: 700; }
+}
+
+.field {
+  margin-bottom: 1.1rem;
+  label {
+    display: block;
+    font-size: .68rem; font-weight: 800; letter-spacing: .08em;
+    color: $outline; text-transform: uppercase;
+    margin-bottom: .45rem;
+  }
+}
+.input-wrap {
+  position: relative;
+  display: flex; align-items: center;
+}
+.input-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: $outline; font-size: 18px; pointer-events: none;
+}
+input[type="text"] {
+  width: 100%; height: 48px;
+  background: $input-bg; border: 1px solid $border;
+  border-radius: 10px;
+  padding: 0 1rem 0 2.65rem;
+  color: $text; font-family: 'Manrope', sans-serif;
+  font-size: 1.1rem; font-weight: 600; letter-spacing: .15em;
+  text-align: center;
+  transition: border-color .2s, background .2s;
+  &:focus {
+    outline: none;
+    border-color: $gold;
+    background: color.adjust($input-bg, $lightness: 2%);
+  }
+}
+.field--error input {
+  border-color: $error;
+}
+.field-err {
+  margin-top: .35rem;
+  font-size: .75rem; color: $error;
+}
+
+.server-error {
+  display: flex; align-items: flex-start; gap: .55rem;
+  padding: .75rem 1rem; margin-bottom: 1rem;
+  background: rgba($error, .12);
+  border: 1px solid rgba($error, .3);
+  border-radius: 10px;
+  color: #f08080; font-size: .85rem; line-height: 1.5;
+  .material-symbols-outlined { font-size: 18px; margin-top: 1px; flex-shrink: 0; }
+}
+
+.submit-btn {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  width: 100%; height: 50px;
+  background: $gold; color: $dark;
+  border: none; border-radius: 12px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem; font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+  margin-top: .25rem;
+  &:hover:not(:disabled) {
+    background: color.adjust($gold, $lightness: 6%);
+  }
+  &:active:not(:disabled) { transform: scale(.98); }
+  &:disabled { opacity: .55; cursor: not-allowed; }
+  .material-symbols-outlined { font-size: 18px; }
+}
+.btn-loading {
+  display: inline-flex; align-items: center; gap: .55rem;
+}
+.btn-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba($dark, .25);
+  border-top-color: $dark;
+  border-radius: 50%;
+  animation: spin .9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.verify-actions {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 1rem;
+  gap: .75rem; flex-wrap: wrap;
+}
+.text-link {
+  background: none; border: none;
+  color: $gold; font-family: 'Manrope', sans-serif;
+  font-size: .82rem; font-weight: 700;
+  text-decoration: none; cursor: pointer;
+  padding: .35rem 0;
+  transition: color .2s, opacity .2s;
+  &:hover { color: $gold-dim; }
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+.bottom-link {
+  text-align: center;
+  margin: 1.25rem 0 0;
+  font-size: .85rem; color: $muted;
+}
+
+@media (max-width: 500px) {
+  .verify-card { padding: 1.75rem 1.25rem 1.5rem; }
+  h1 { font-size: 1.2rem; }
+}

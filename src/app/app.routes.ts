@@ -8,6 +8,10 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'login',    component: Login },
   {
+    path: 'verify-otp',
+    loadComponent: () => import('./auth/verify-otp/verify-otp').then(m => m.VerifyOtp),
+  },
+  {
     path: 'forgot-password',
     loadComponent: () => import('./auth/forgot-password/forgot-password').then(m => m.ForgotPassword),
   },

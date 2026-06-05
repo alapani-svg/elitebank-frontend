@@ -1,0 +1,78 @@
+<div class="bokeh-bg"></div>
+
+<header class="top-bar">
+  <a class="brand" routerLink="/">ELITE BANK</a>
+  <div class="top-icons">
+    <a class="icon-btn-link" routerLink="/login">Sign In</a>
+  </div>
+</header>
+
+<main class="verify-page">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="verify-card">
+
+    <div class="card-header">
+      <div class="shield-icon">
+        <span class="material-symbols-outlined">mark_email_read</span>
+      </div>
+      <h1>Verify your email</h1>
+      <p class="sub">
+        We've sent a 6-digit code to <strong>{{ maskedEmail || registeredEmail }}</strong>.
+        Enter it below to activate your account.
+      </p>
+    </div>
+
+    <form [formGroup]="otpForm" (ngSubmit)="verify()" novalidate>
+
+      <div class="field" [class.field--error]="f['code'].invalid && f['code'].touched">
+        <label for="otp-code">Verification Code</label>
+        <div class="input-wrap">
+          <span class="material-symbols-outlined input-icon">key</span>
+          <input id="otp-code"
+                 type="text"
+                 inputmode="numeric"
+                 autocomplete="one-time-code"
+                 maxlength="6"
+                 placeholder="123456"
+                 formControlName="code">
+        </div>
+        <div class="field-err" *ngIf="f['code'].invalid && f['code'].touched">
+          <span *ngIf="f['code'].errors?.['required']">Enter the 6-digit code.</span>
+          <span *ngIf="f['code'].errors?.['pattern']">Code must be exactly 6 digits.</span>
+        </div>
+      </div>
+
+      <div class="server-error" *ngIf="error">
+        <span class="material-symbols-outlined">error</span> {{ error }}
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="otpForm.invalid || loading">
+        <span *ngIf="!loading">
+          Verify &amp; Continue <span class="material-symbols-outlined">arrow_forward</span>
+        </span>
+        <span *ngIf="loading" class="btn-loading">
+          <span class="btn-spinner"></span> Verifying…
+        </span>
+      </button>
+
+      <div class="verify-actions">
+        <button type="button" class="text-link" (click)="cancel()">
+          Use a different account
+        </button>
+        <button type="button" class="text-link"
+                [disabled]="resendCooldown > 0 || loading"
+                (click)="resend()">
+          <span *ngIf="resendCooldown === 0">Resend code</span>
+          <span *ngIf="resendCooldown > 0">Resend in {{ resendCooldown }}s</span>
+        </button>
+      </div>
+    </form>
+
+    <p class="bottom-link">
+      Already verified? <a routerLink="/login" class="text-link">Sign In</a>
+    </p>
+
+  </div>
+</main>

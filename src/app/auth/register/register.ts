@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import {
   ReactiveFormsModule, FormBuilder, FormGroup,
@@ -21,24 +21,13 @@ function passwordMatch(group: AbstractControl): ValidationErrors | null {
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
-export class Register implements OnInit, OnDestroy {
+export class Register implements OnInit {
 
-  // Step 1: signup form
   registerForm!: FormGroup;
   isLoading    = false;
   serverError  = '';
   showPw       = false;
   showPwC      = false;
-
-  // Step 2: OTP verification
-  challengeId     = '';
-  maskedEmail     = '';
-  registeredEmail = '';
-  otpForm!:    FormGroup;
-  otpLoading   = false;
-  otpError     = '';
-  resendCooldown = 0;
-  private resendTimer?: ReturnType<typeof setInterval>;
 
   constructor(
     private fb: FormBuilder,
@@ -58,18 +47,9 @@ export class Register implements OnInit, OnDestroy {
       },
       { validators: passwordMatch }
     );
-
-    this.otpForm = this.fb.group({
-      code: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
-    });
   }
 
-  ngOnDestroy(): void {
-    this.stopResendCooldown();
-  }
-
-  get f()  { return this.registerForm.controls; }
-  get of() { return this.otpForm.controls; }
+  get f() { return this.registerForm.controls; }
   get mismatch(): boolean {
     return this.registerForm.hasError('passwordMismatch') &&
            (this.f['password_confirm'].dirty || this.f['password_confirm'].touched);
@@ -78,7 +58,6 @@ export class Register implements OnInit, OnDestroy {
   togglePw():  void { this.showPw  = !this.showPw;  }
   togglePwC(): void { this.showPwC = !this.showPwC; }
 
-  // Step 1: submit signup → backend creates user, sends OTP email
   onSubmit(): void {
     if (this.registerForm.invalid || this.isLoading) return;
     this.isLoading   = true;
@@ -86,74 +65,21 @@ export class Register implements OnInit, OnDestroy {
 
     this.auth.register(this.registerForm.value).subscribe({
       next: (res) => {
-        this.isLoading       = false;
-        this.challengeId     = res.challenge_id;
-        this.maskedEmail     = res.masked_email;
-        this.registeredEmail = res.email;
-        this.startResendCooldown(30);
+        this.isLoading = false;
+        this.router.navigate(['/verify-otp'], {
+          state: {
+            challenge_id: res.challenge_id,
+            masked_email: res.masked_email,
+            email:        res.email,
+          },
+          queryParams: { email: res.email },
+        });
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading   = false;
         this.serverError = this.parseError(err);
       }
     });
-  }
-
-  // Step 2: verify OTP → backend confirms + returns JWT → navigate to dashboard
-  verifyOtp(): void {
-    if (this.otpForm.invalid || this.otpLoading) return;
-    this.otpLoading = true;
-    this.otpError   = '';
-
-    this.auth.verifyRegistration(this.challengeId, this.otpForm.value.code).subscribe({
-      next: () => {
-        this.otpLoading = false;
-        this.stopResendCooldown();
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.otpLoading = false;
-        this.otpError   = this.parseError(err);
-        this.otpForm.patchValue({ code: '' });
-      },
-    });
-  }
-
-  resendOtp(): void {
-    if (this.resendCooldown > 0 || this.otpLoading) return;
-    this.otpError = '';
-    this.auth.resendRegistrationOtp(this.registeredEmail).subscribe({
-      next: (res) => {
-        if (res.challenge_id) this.challengeId = res.challenge_id;
-        if (res.masked_email) this.maskedEmail = res.masked_email;
-        this.startResendCooldown(30);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.otpError = this.parseError(err);
-      },
-    });
-  }
-
-  cancelOtp(): void {
-    this.challengeId     = '';
-    this.maskedEmail     = '';
-    this.registeredEmail = '';
-    this.otpForm.reset();
-    this.stopResendCooldown();
-  }
-
-  private startResendCooldown(seconds: number): void {
-    this.stopResendCooldown();
-    this.resendCooldown = seconds;
-    this.resendTimer = setInterval(() => {
-      this.resendCooldown--;
-      if (this.resendCooldown <= 0) this.stopResendCooldown();
-    }, 1000);
-  }
-
-  private stopResendCooldown(): void {
-    if (this.resendTimer) { clearInterval(this.resendTimer); this.resendTimer = undefined; }
-    this.resendCooldown = 0;
   }
 
   private parseError(err: HttpErrorResponse): string {
