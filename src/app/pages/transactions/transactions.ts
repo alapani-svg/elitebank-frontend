@@ -19,15 +19,30 @@ import { Transaction } from '../../models/transaction.model';
 export class Transactions implements OnInit {
 
   transactions: Transaction[] = [];
+  visibleTransactions: Transaction[] = [];
   loading = true;
   error = '';
   sidebarOpen = false;
 
   activeFilter       = 'ALL';
   activeStatusFilter = 'ALL';
+  activeRange        = '30';
+  searchTerm         = '';
 
   filters       = ['ALL', 'TRANSFER', 'DEPOSIT', 'BILL_PAYMENT', 'AIRTIME', 'WITHDRAWAL'];
   statusFilters = ['ALL', 'COMPLETED', 'PENDING', 'FAILED'];
+  rangeOptions  = [
+    { value: '7',   label: 'Last 7 days'  },
+    { value: '30',  label: 'Last 30 days' },
+    { value: '90',  label: 'Last 3 months'},
+    { value: '365', label: 'Last year'    },
+    { value: 'all', label: 'All time'     },
+  ];
+
+  /** Stats derived from the loaded transactions (filtered by range). */
+  monthlyInflow  = 0;
+  monthlyOutflow = 0;
+  txCount        = 0;
 
   // Statement download modal
   statementOpen = false;
@@ -56,6 +71,7 @@ export class Transactions implements OnInit {
     this.txService.getAll({ type, status }).subscribe({
       next: (data) => {
         this.transactions = data;
+        this.recomputeView();
         this.loading = false;
       },
       error: () => {
@@ -75,6 +91,57 @@ export class Transactions implements OnInit {
     this.loadTransactions();
   }
 
+  applyRange(value: string): void {
+    this.activeRange = value;
+    this.recomputeView();
+  }
+
+  applySearch(value: string): void {
+    this.searchTerm = (value || '').trim().toLowerCase();
+    this.recomputeView();
+  }
+
+  /** Apply range + search filtering client-side, then refresh the stats. */
+  private recomputeView(): void {
+    const now = Date.now();
+    const rangeDays = this.activeRange === 'all' ? Infinity : Number(this.activeRange);
+    const cutoff = now - rangeDays * 24 * 60 * 60 * 1000;
+    const term   = this.searchTerm;
+
+    const inRange = this.transactions.filter(tx => {
+      if (this.activeRange === 'all') return true;
+      const t = new Date(tx.created_at).getTime();
+      return !isNaN(t) && t >= cutoff;
+    });
+
+    this.visibleTransactions = !term ? inRange : inRange.filter(tx => {
+      const sender    = (tx.sender_name    || '').toLowerCase();
+      const recipient = (tx.recipient_name || '').toLowerCase();
+      const ref       = (tx.reference      || '').toLowerCase();
+      const desc      = (tx.description    || '').toLowerCase();
+      const amount    = String(tx.amount   || '');
+      return sender.includes(term) || recipient.includes(term) ||
+             ref.includes(term)    || desc.includes(term)      ||
+             amount.includes(term);
+    });
+
+    this.computeStats(inRange);
+  }
+
+  private computeStats(scope: Transaction[]): void {
+    let inflow  = 0;
+    let outflow = 0;
+    for (const tx of scope) {
+      if (tx.status !== 'COMPLETED') continue;
+      const amt = Number(tx.amount || 0);
+      if (this.isCredit(tx)) inflow  += amt;
+      else                   outflow += amt;
+    }
+    this.monthlyInflow  = inflow;
+    this.monthlyOutflow = outflow;
+    this.txCount        = scope.length;
+  }
+
   isCredit(tx: Transaction): boolean {
     if (tx.transaction_type === 'DEPOSIT') return true;
     const userId = this.auth.getCurrentUserId();
@@ -84,6 +151,21 @@ export class Transactions implements OnInit {
   formatAmount(tx: Transaction): string {
     const sign = this.isCredit(tx) ? '+' : '-';
     return `${sign}${Number(tx.amount).toLocaleString('fr-CM')} XAF`;
+  }
+
+  txIcon(tx: Transaction): string {
+    switch (tx.transaction_type) {
+      case 'DEPOSIT':       return 'add_circle';
+      case 'WITHDRAWAL':    return 'remove_circle';
+      case 'BILL_PAYMENT':  return 'electric_bolt';
+      case 'AIRTIME':       return 'smartphone';
+      case 'TRANSFER':      return this.isCredit(tx) ? 'south_west' : 'north_east';
+      default:              return 'swap_horiz';
+    }
+  }
+
+  txTypeLabel(tx: Transaction): string {
+    return this.isCredit(tx) ? 'Credit' : 'Debit';
   }
 
   // ── Statement download ────────────────────────────────────────────────────

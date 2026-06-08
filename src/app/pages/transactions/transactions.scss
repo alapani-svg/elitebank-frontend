@@ -559,3 +559,299 @@ $red:        #E05252;
   &.status-failed    { background: rgba($red, .12); color: $red; }
   &.status-cancelled { background: rgba($outline, .10); color: $outline; }
 }
+
+// ============================================================================
+//  REDESIGNED ELEMENTS  (stats bar, filters panel, table, info cards)
+// ============================================================================
+
+.eyebrow {
+  display: inline-block;
+  font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+  color: $gold; text-transform: uppercase;
+  margin-bottom: .35rem;
+}
+
+.tx-page-title {
+  font-size: 2.25rem; font-weight: 800; letter-spacing: -0.02em;
+  margin: 0 0 .35rem;
+  @media (max-width: 700px) { font-size: 1.6rem; }
+}
+
+// ── Stats bar ────────────────────────────────────────────────────────────────
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+.stat-card {
+  background: rgba($card-bg, .85);
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex; flex-direction: column; gap: .65rem;
+  backdrop-filter: blur(8px);
+  position: relative;
+
+  &.premium {
+    border-left: 4px solid $gold;
+  }
+}
+
+.stat-label {
+  font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+  color: $outline; text-transform: uppercase;
+
+  &.premium-label { color: $gold; }
+}
+
+.stat-value {
+  font-size: 1.75rem; font-weight: 800; color: $text;
+  letter-spacing: -0.01em;
+  display: flex; align-items: baseline; gap: .35rem;
+
+  &.positive { color: $green; }
+
+  &.premium-value {
+    font-size: 1.15rem; align-items: center; gap: .45rem;
+    color: $text;
+    .material-symbols-outlined {
+      color: $gold; font-size: 22px;
+      font-variation-settings: 'FILL' 1;
+    }
+  }
+}
+
+.stat-unit {
+  font-size: .75rem; font-weight: 600; color: $outline;
+  letter-spacing: .05em;
+}
+
+// ── Filters panel ────────────────────────────────────────────────────────────
+.filters-panel {
+  background: rgba($card-bg, .6);
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.filters-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1; min-width: 250px;
+
+  .material-symbols-outlined {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: $outline; font-size: 20px; pointer-events: none;
+  }
+
+  input {
+    width: 100%; height: 44px;
+    background: $dark; border: 1px solid $border;
+    border-radius: 10px;
+    padding: 0 1rem 0 2.55rem;
+    color: $text; font-family: 'Manrope', sans-serif;
+    font-size: .9rem;
+    transition: border-color .2s, background .2s;
+    &:focus {
+      outline: none;
+      border-color: rgba($gold, .5);
+      background: color.adjust($dark, $lightness: 2%);
+    }
+    &::placeholder { color: $outline; }
+  }
+}
+
+.filter-selects {
+  display: flex; gap: .6rem; flex-wrap: wrap;
+}
+
+.filter-select {
+  height: 44px; min-width: 140px;
+  background: $dark; border: 1px solid $border;
+  border-radius: 10px;
+  padding: 0 .9rem;
+  color: $text; font-family: 'Manrope', sans-serif;
+  font-size: .85rem; font-weight: 500;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+
+  &:hover { border-color: rgba($gold, .3); }
+  &:focus { outline: none; border-color: rgba($gold, .5); }
+
+  option { background: $card-bg; color: $text; }
+}
+
+// ── Transaction table ───────────────────────────────────────────────────────
+.tx-table-wrap {
+  background: rgba($card-bg, .85);
+  border: 1px solid $border;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+  backdrop-filter: blur(8px);
+}
+
+.tx-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr {
+    background: rgba($dark, .5);
+    border-bottom: 1px solid $border;
+  }
+
+  th {
+    padding: .9rem 1.25rem;
+    text-align: left;
+    font-size: .68rem; font-weight: 800; letter-spacing: .1em;
+    color: $outline; text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  th.col-amount { text-align: right; }
+  th.col-status { text-align: center; width: 120px; }
+  th.col-type   { width: 110px; }
+  th.col-date   { width: 130px; }
+
+  // Override the older flex .tx-row layout when inside the new table
+  .tx-row {
+    display: table-row;
+    background: none;
+    border: none;
+    padding: 0;
+    border-bottom: 1px solid rgba($gold, .04);
+    transition: background .15s;
+
+    &:hover { background: rgba($gold, .04); }
+    &:last-child { border-bottom: none; }
+  }
+
+  td {
+    padding: 1rem 1.25rem;
+    font-size: .88rem;
+    color: $text;
+    vertical-align: middle;
+  }
+
+  td.col-amount { text-align: right; font-weight: 700; }
+  td.col-status { text-align: center; }
+}
+
+.desc-cell {
+  display: flex; align-items: center; gap: .9rem;
+}
+
+.desc-text {
+  display: flex; flex-direction: column; gap: 2px;
+  overflow: hidden;
+}
+
+.desc-text .tx-name {
+  font-size: .95rem; font-weight: 700; color: $text;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.desc-text .tx-sub {
+  font-size: .72rem; color: $outline;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.type-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: .72rem; font-weight: 600;
+  border-radius: 6px;
+  background: rgba($outline, .15);
+  color: $muted;
+
+  &.credit { background: rgba($green, .12); color: $green; }
+}
+
+.tx-amount.positive { color: $green; }
+
+.tx-table-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .9rem 1.25rem;
+  border-top: 1px solid $border;
+  background: rgba($dark, .35);
+}
+
+.tx-count {
+  font-size: .8rem; color: $muted;
+}
+
+// ── Bottom info cards ────────────────────────────────────────────────────────
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 800px) { grid-template-columns: 1fr; }
+}
+
+.info-card {
+  background: rgba($card-bg, .85);
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.info-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: rgba($gold, .1);
+  border: 1px solid rgba($gold, .25);
+  display: flex; align-items: center; justify-content: center;
+  color: $gold; flex-shrink: 0;
+  .material-symbols-outlined { font-size: 26px; }
+}
+
+.info-content {
+  display: flex; flex-direction: column; gap: 4px;
+  h4 {
+    font-size: 1rem; font-weight: 700; color: $text;
+    margin: 0;
+  }
+  p {
+    font-size: .82rem; color: $muted; margin: 0; line-height: 1.5;
+    strong { color: $gold-dim; font-weight: 700; }
+  }
+}
+
+// ── Mobile table → cards ─────────────────────────────────────────────────────
+@media (max-width: 700px) {
+  .tx-table thead { display: none; }
+  .tx-table { display: block; }
+  .tx-table tbody { display: block; }
+  .tx-table .tx-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "desc desc amt"
+      "date type status";
+    gap: .35rem .75rem;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid rgba($gold, .06);
+  }
+  .tx-table .tx-row td {
+    padding: 0; vertical-align: top;
+    &.col-date   { grid-area: date;   font-size: .72rem; color: $outline; }
+    &.col-desc   { grid-area: desc; }
+    &.col-type   { grid-area: type;   text-align: left; }
+    &.col-amount { grid-area: amt;    text-align: right; font-size: 1rem; }
+    &.col-status { grid-area: status; text-align: right; }
+  }
+  .desc-text .tx-sub { max-width: none; }
+}

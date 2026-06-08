@@ -174,7 +174,14 @@ $mtn-yel:   #FFC300;
   &:hover { background: rgba($gold, 0.16); }
 }
 
-.withdraw-title { font-size: 1.4rem; font-weight: 800; color: $text; margin: 0; }
+.eyebrow {
+  display: inline-block;
+  font-size: .68rem; font-weight: 700; letter-spacing: .12em;
+  color: $gold; text-transform: uppercase;
+  margin-bottom: .25rem;
+}
+
+.withdraw-title { font-size: 1.5rem; font-weight: 800; color: $text; margin: 0; letter-spacing: -0.01em; }
 .withdraw-sub   { font-size: .83rem; color: $muted; margin: .1rem 0 0; }
 
 .balance-card {

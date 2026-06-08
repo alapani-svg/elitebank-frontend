@@ -68,17 +68,18 @@
 
     <div class="tx-page">
 
-      <!-- Header -->
+      <!-- ── Header ─────────────────────────────────────────────────────── -->
       <div class="tx-page-header">
         <div class="tx-header-left">
           <div>
+            <span class="eyebrow">Wealth Management</span>
             <h1 class="tx-page-title">{{ 'tx.title' | t }}</h1>
             <p class="tx-page-sub">{{ 'tx.subtitle' | t }}</p>
           </div>
         </div>
         <div class="header-actions">
           <button class="new-tx-btn download-btn" (click)="openStatement()" type="button">
-            <span class="material-symbols-outlined">download</span> {{ 'tx.statementBtn' | t }}
+            <span class="material-symbols-outlined">file_download</span> {{ 'tx.statementBtn' | t }}
           </button>
           <a routerLink="/transactions/deposit" class="new-tx-btn deposit-btn">
             <span class="material-symbols-outlined">smartphone</span> {{ 'tx.rechargeBtn' | t }}
@@ -89,44 +90,77 @@
         </div>
       </div>
 
-      <!-- Type filters -->
-      <div class="tx-filters">
-        <button
-          *ngFor="let f of filters"
-          class="filter-btn"
-          [class.active]="activeFilter === f"
-          (click)="applyFilter(f)">
-          {{ f }}
-        </button>
+      <!-- ── Stats bar ──────────────────────────────────────────────────── -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <span class="stat-label">Monthly Inflow</span>
+          <span class="stat-value positive">
+            +{{ monthlyInflow | number:'1.0-0' }}
+            <span class="stat-unit">XAF</span>
+          </span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Monthly Outflow</span>
+          <span class="stat-value">
+            {{ monthlyOutflow | number:'1.0-0' }}
+            <span class="stat-unit">XAF</span>
+          </span>
+        </div>
+        <div class="stat-card premium">
+          <span class="stat-label premium-label">Premium Status</span>
+          <span class="stat-value premium-value">
+            <span class="material-symbols-outlined">verified</span>
+            Elite Tier Active
+          </span>
+        </div>
       </div>
 
-      <!-- Status filters -->
-      <div class="tx-filters status-filters">
-        <button
-          *ngFor="let s of statusFilters"
-          class="filter-btn status-btn"
-          [class.active]="activeStatusFilter === s"
-          [class.completed]="s === 'COMPLETED'"
-          [class.pending]="s === 'PENDING'"
-          [class.failed]="s === 'FAILED'"
-          (click)="applyStatusFilter(s)">
-          <span class="status-dot" *ngIf="s !== 'ALL'"></span>{{ s }}
-        </button>
+      <!-- ── Filters panel ──────────────────────────────────────────────── -->
+      <div class="filters-panel">
+        <div class="filters-row">
+          <div class="search-wrap">
+            <span class="material-symbols-outlined">search</span>
+            <input
+              type="text"
+              placeholder="Search merchant, reference, or amount…"
+              [value]="searchTerm"
+              (input)="applySearch($any($event.target).value)">
+          </div>
+          <div class="filter-selects">
+            <select class="filter-select"
+                    [value]="activeFilter"
+                    (change)="applyFilter($any($event.target).value)">
+              <option *ngFor="let f of filters" [value]="f">
+                {{ f === 'ALL' ? 'All Types' : f }}
+              </option>
+            </select>
+            <select class="filter-select"
+                    [value]="activeStatusFilter"
+                    (change)="applyStatusFilter($any($event.target).value)">
+              <option *ngFor="let s of statusFilters" [value]="s">
+                {{ s === 'ALL' ? 'All Statuses' : s }}
+              </option>
+            </select>
+            <select class="filter-select"
+                    [value]="activeRange"
+                    (change)="applyRange($any($event.target).value)">
+              <option *ngFor="let r of rangeOptions" [value]="r.value">{{ r.label }}</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <!-- Loading spinner -->
+      <!-- ── Loading / Error / Empty ────────────────────────────────────── -->
       <div *ngIf="loading" class="tx-spinner">
         <div class="spinner"></div>
         <p>{{ 'tx.loading' | t }}</p>
       </div>
 
-      <!-- Error -->
       <div *ngIf="!loading && error" class="tx-error">
         <span class="material-symbols-outlined">warning</span> {{ error }}
       </div>
 
-      <!-- Empty state -->
-      <div *ngIf="!loading && !error && transactions.length === 0" class="tx-empty">
+      <div *ngIf="!loading && !error && visibleTransactions.length === 0 && transactions.length === 0" class="tx-empty">
         <span class="material-symbols-outlined tx-empty-icon">inbox</span>
         <p>{{ 'tx.empty' | t }}</p>
         <a routerLink="/transactions/transfer" class="new-tx-btn">
@@ -134,32 +168,92 @@
         </a>
       </div>
 
-      <!-- Transaction list -->
-      <div *ngIf="!loading && !error && transactions.length > 0" class="tx-list">
-        <div class="tx-row" *ngFor="let tx of transactions">
+      <div *ngIf="!loading && !error && visibleTransactions.length === 0 && transactions.length > 0" class="tx-empty">
+        <span class="material-symbols-outlined tx-empty-icon">search_off</span>
+        <p>No transactions match your filters.</p>
+      </div>
 
-          <div class="tx-icon-wrap" [class.credit]="isCredit(tx)" [class.debit]="!isCredit(tx)">
-            <span class="material-symbols-outlined">{{ isCredit(tx) ? 'south_west' : 'north_east' }}</span>
+      <!-- ── Transaction table ──────────────────────────────────────────── -->
+      <div *ngIf="!loading && !error && visibleTransactions.length > 0" class="tx-table-wrap">
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th class="col-date">Date</th>
+              <th class="col-desc">Description</th>
+              <th class="col-type">Type</th>
+              <th class="col-amount">Amount (XAF)</th>
+              <th class="col-status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="tx-row" *ngFor="let tx of visibleTransactions">
+              <td class="col-date">{{ tx.created_at | date:'MMM d, yyyy' }}</td>
+              <td class="col-desc">
+                <div class="desc-cell">
+                  <div class="tx-icon-wrap" [class.credit]="isCredit(tx)" [class.debit]="!isCredit(tx)">
+                    <span class="material-symbols-outlined">{{ txIcon(tx) }}</span>
+                  </div>
+                  <div class="desc-text">
+                    <span class="tx-name">
+                      {{ isCredit(tx) ? (tx.sender_name || ('tx.unknown' | t)) : (tx.recipient_name || ('tx.unknown' | t)) }}
+                    </span>
+                    <span class="tx-sub">
+                      {{ tx.description || tx.reference }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td class="col-type">
+                <span class="type-tag" [class.credit]="isCredit(tx)">{{ txTypeLabel(tx) }}</span>
+              </td>
+              <td class="col-amount">
+                <span class="tx-amount" [class.positive]="isCredit(tx)">
+                  {{ formatAmount(tx) }}
+                </span>
+              </td>
+              <td class="col-status">
+                <span class="tx-status" [class]="'status-' + tx.status.toLowerCase()">
+                  {{ tx.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="tx-table-footer">
+          <span class="tx-count">
+            Showing {{ visibleTransactions.length }} of {{ transactions.length }} transactions
+          </span>
+        </div>
+      </div>
+
+      <!-- ── Bottom info cards ──────────────────────────────────────────── -->
+      <div class="info-cards" *ngIf="!loading && !error">
+        <div class="info-card">
+          <div class="info-icon">
+            <span class="material-symbols-outlined">insights</span>
           </div>
-
-          <div class="tx-info">
-            <span class="tx-name">
-              {{ isCredit(tx) ? (tx.sender_name || ('tx.unknown' | t)) : (tx.recipient_name || ('tx.unknown' | t)) }}
-            </span>
-            <span class="tx-ref">{{ tx.reference }}</span>
-            <span class="tx-desc" *ngIf="tx.description">{{ tx.description }}</span>
+          <div class="info-content">
+            <h4>Smart Insights</h4>
+            <p>
+              <span *ngIf="monthlyOutflow > 0">
+                You spent <strong>{{ monthlyOutflow | number:'1.0-0' }} XAF</strong> in the last
+                {{ activeRange === 'all' ? 'period' : activeRange + ' days' }}.
+              </span>
+              <span *ngIf="monthlyOutflow === 0">
+                No spending recorded in the selected range.
+              </span>
+            </p>
           </div>
-
-          <div class="tx-meta">
-            <span class="tx-amount" [class.positive]="isCredit(tx)" [class.negative]="!isCredit(tx)">
-              {{ formatAmount(tx) }}
-            </span>
-            <span class="tx-date">{{ tx.created_at | date:'dd MMM yyyy · HH:mm' }}</span>
-            <span class="tx-status" [class]="'status-' + tx.status.toLowerCase()">
-              {{ tx.status }}
-            </span>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">
+            <span class="material-symbols-outlined">verified_user</span>
           </div>
-
+          <div class="info-content">
+            <h4>Security Center</h4>
+            <p>Protect every large transfer with biometric multi-sig and instant fraud alerts.</p>
+          </div>
         </div>
       </div>
 
