@@ -8,7 +8,7 @@ export const SUPPORTED_LANGS: Record<LangCode, string> = {
 type Bundle = Record<string, string>;
 
 const en: Bundle = {
-  // ── Sidebar nav (shown on every authenticated page) ────────────────────────
+  //  Sidebar nav (shown on every authenticated page) 
   'nav.dashboard':       'Dashboard',
   'nav.transactions':    'Transactions',
   'nav.recharge':        'Recharge',
@@ -449,7 +449,7 @@ const fr: Bundle = {
   'auth.home':           'Accueil',
   'auth.invest':         'Investir',
 
-  // ── Common ─────────────────────────────────────────────────────────────────
+  // ── Common 
   'common.required':       'Requis.',
   'common.optional':       '(facultatif)',
   'common.cancel':         'Annuler',

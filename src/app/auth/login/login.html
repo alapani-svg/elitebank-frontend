@@ -39,6 +39,10 @@
       <span class="material-symbols-outlined">warning</span>
       <span>{{ serverError }}</span>
     </div>
+    <div class="alert-success" *ngIf="successMessage" role="status">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ successMessage }}</span>
+    </div>
 
     <!-- Login Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
@@ -48,13 +52,8 @@
         <label class="field-label" for="email">EMAIL OR PHONE NUMBER</label>
         <div class="input-wrap">
           <span class="material-symbols-outlined input-icon">account_circle</span>
-          <input
-            id="email"
-            type="text"
-            placeholder="Enter your credentials"
-            formControlName="email"
-            autocomplete="email"
-          />
+          <input id="email" type="text" placeholder="Enter your credentials" formControlName="email"
+            autocomplete="email" />
         </div>
         <div class="field-err" *ngIf="f['email'].invalid && f['email'].touched">
           <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
@@ -70,13 +69,8 @@
         </div>
         <div class="input-wrap">
           <span class="material-symbols-outlined input-icon">lock</span>
-          <input
-            id="password"
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder="••••••••"
-            formControlName="password"
-            autocomplete="current-password"
-          />
+          <input id="password" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
+            formControlName="password" autocomplete="current-password" />
           <button type="button" class="toggle-pw" (click)="togglePassword()" aria-label="Toggle password">
             <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
           </button>
@@ -93,11 +87,7 @@
       </div>
 
       <!-- Submit -->
-      <button
-        type="submit"
-        class="submit-btn"
-        [disabled]="loginForm.invalid || isLoading"
-      >
+      <button type="submit" class="submit-btn" [disabled]="loginForm.invalid || isLoading">
         <ng-container *ngIf="!isLoading">Login</ng-container>
         <ng-container *ngIf="isLoading">
           <span class="spinner"></span> Authenticating…

@@ -103,7 +103,6 @@
                     </div>
 
                     <span class="edit-avatar-label">{{ 'profile.editAvatar' | t }}</span>
-                    <span class="avatar-hint">{{ 'profile.avatarHint' | t }}</span>
 
                     <span class="avatar-error" *ngIf="avatarError">
                         <span class="material-symbols-outlined">error</span> {{ avatarError }}
@@ -208,7 +207,7 @@
                             </div>
                             <div class="field-err" *ngIf="pf['new_password'].invalid && pf['new_password'].touched">
                                 <span *ngIf="pf['new_password'].errors?.['minlength']">Min 8 chars.</span>
-                                <span *ngIf="pf['new_password'].errors?.['pattern']">Use letters &amp; numbers.</span>
+                                <span *ngIf="pf['new_password'].errors?.['pattern']">Use letters  numbers.</span>
                             </div>
                         </div>
 

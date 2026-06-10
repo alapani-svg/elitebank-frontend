@@ -15,8 +15,9 @@ import { AuthService } from '../../services/auth.service';
 export class Login implements OnInit {
 
   loginForm!: FormGroup;
-  isLoading    = false;
-  serverError  = '';
+  isLoading = false;
+  serverError = '';
+  successMessage = '';
   showPassword = false;
   private returnUrl = '/dashboard';
 
@@ -25,18 +26,30 @@ export class Login implements OnInit {
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+    const verified = this.route.snapshot.queryParamMap.get('verified');
+    const email = this.route.snapshot.queryParamMap.get('email');
+    if (email) {
+      this.successMessage = verified === '1'
+        ? 'Your email has been verified. Please login.'
+        : '';
+    }
     if (this.auth.isLoggedIn()) {
       this.router.navigate([this.returnUrl]);
     }
 
     this.loginForm = this.fb.group({
-      email:    ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
+
+    const emailFromQuery = this.route.snapshot.queryParamMap.get('email');
+    if (emailFromQuery) {
+      this.loginForm.patchValue({ email: emailFromQuery });
+    }
   }
 
   get f() { return this.loginForm.controls; }
@@ -44,7 +57,7 @@ export class Login implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.invalid || this.isLoading) return;
-    this.isLoading   = true;
+    this.isLoading = true;
     this.serverError = '';
 
     this.auth.login(this.loginForm.value).subscribe({
@@ -53,7 +66,7 @@ export class Login implements OnInit {
         this.router.navigate([this.returnUrl]);
       },
       error: (err: HttpErrorResponse) => {
-        this.isLoading   = false;
+        this.isLoading = false;
         this.serverError = this.parseError(err);
       }
     });
@@ -61,7 +74,7 @@ export class Login implements OnInit {
 
   private parseError(err: HttpErrorResponse): string {
     if (!err.error) return 'An unexpected error occurred. Please try again.';
-    if (err.error.detail)   return err.error.detail;
+    if (err.error.detail) return err.error.detail;
     if (typeof err.error === 'string') return err.error;
     const messages: string[] = [];
     for (const key of Object.keys(err.error)) {
