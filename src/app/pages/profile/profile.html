@@ -17,7 +17,8 @@
         <a class="nav-item" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
             <span class="material-symbols-outlined">grid_view</span><span>{{ 'nav.dashboard' | t }}</span>
         </a>
-        <a class="nav-item" routerLink="/transactions" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+        <a class="nav-item" routerLink="/transactions" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact:true}">
             <span class="material-symbols-outlined">swap_horiz</span><span>{{ 'nav.transactions' | t }}</span>
         </a>
         <a class="nav-item" routerLink="/transactions/deposit" routerLinkActive="active">
@@ -60,7 +61,7 @@
         <div class="topbar-actions">
             <app-notif-bell></app-notif-bell>
             <button class="icon-btn" (click)="openHelp()" title="Help & Support">
-              <span class="material-symbols-outlined">help</span>
+                <span class="material-symbols-outlined">help</span>
             </button>
             <app-user-avatar [clickable]="false"></app-user-avatar>
         </div>
@@ -175,7 +176,8 @@
                         <div class="security-item-info">
                             <span class="security-item-title">{{ 'profile.changePassword' | t }}</span>
                             <span class="security-item-sub">
-                                {{ (user?.password_changed_at ? 'profile.lastChangedRecently' : 'profile.neverChanged') | t }}
+                                {{ (user?.password_changed_at ? 'profile.lastChangedRecently' : 'profile.neverChanged')
+                                | t }}
                             </span>
                         </div>
                     </div>
@@ -188,7 +190,8 @@
                                 <input [type]="showCurrentPw ? 'text' : 'password'" formControlName="current_password"
                                     placeholder="••••••••" />
                                 <button type="button" class="toggle-pw" (click)="showCurrentPw = !showCurrentPw">
-                                    <span class="material-symbols-outlined">{{ showCurrentPw ? 'visibility_off' : 'visibility' }}</span>
+                                    <span class="material-symbols-outlined">{{ showCurrentPw ? 'visibility_off' :
+                                        'visibility' }}</span>
                                 </button>
                             </div>
                             <div class="field-err"
@@ -202,12 +205,13 @@
                                 <input [type]="showNewPw ? 'text' : 'password'" formControlName="new_password"
                                     placeholder="••••••••" />
                                 <button type="button" class="toggle-pw" (click)="showNewPw = !showNewPw">
-                                    <span class="material-symbols-outlined">{{ showNewPw ? 'visibility_off' : 'visibility' }}</span>
+                                    <span class="material-symbols-outlined">{{ showNewPw ? 'visibility_off' :
+                                        'visibility' }}</span>
                                 </button>
                             </div>
                             <div class="field-err" *ngIf="pf['new_password'].invalid && pf['new_password'].touched">
                                 <span *ngIf="pf['new_password'].errors?.['minlength']">Min 8 chars.</span>
-                                <span *ngIf="pf['new_password'].errors?.['pattern']">Use letters  numbers.</span>
+                                <span *ngIf="pf['new_password'].errors?.['pattern']">Use letters numbers.</span>
                             </div>
                         </div>
 
@@ -258,8 +262,8 @@
                         {{ 'profile.emailNotifications' | t }}
                         <span class="pref-saving" *ngIf="prefSavingEmail">{{ 'profile.savingPref' | t }}</span>
                     </span>
-                    <button class="toggle-switch" [class.on]="emailNotif"
-                            [disabled]="prefSavingEmail" (click)="toggleEmailNotif()">
+                    <button class="toggle-switch" [class.on]="emailNotif" [disabled]="prefSavingEmail"
+                        (click)="toggleEmailNotif()">
                         <span class="toggle-knob"></span>
                     </button>
                 </div>
@@ -269,8 +273,8 @@
                         {{ 'profile.smsAlerts' | t }}
                         <span class="pref-saving" *ngIf="prefSavingSms">{{ 'profile.savingPref' | t }}</span>
                     </span>
-                    <button class="toggle-switch" [class.on]="smsAlerts"
-                            [disabled]="prefSavingSms" (click)="toggleSmsAlerts()">
+                    <button class="toggle-switch" [class.on]="smsAlerts" [disabled]="prefSavingSms"
+                        (click)="toggleSmsAlerts()">
                         <span class="toggle-knob"></span>
                     </button>
                 </div>
@@ -285,7 +289,6 @@
                             <option value="en">English</option>
                             <option value="fr">Français</option>
                         </select>
-                        <span class="material-symbols-outlined">expand_more</span>
                     </div>
                 </div>
 
