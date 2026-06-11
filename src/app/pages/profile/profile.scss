@@ -751,18 +751,19 @@ select {
     position: relative;
     width: 100%;
 
-    i {
+    .select-icon {
         position: absolute;
         right: 12px;
         top: 50%;
         transform: translateY(-50%);
         color: $outline;
-        font-size: 13px;
+        font-size: 18px;
         pointer-events: none;
     }
 
     select {
-        padding-right: 36px;
+        width: 100%;
+        padding-right: 44px;
         appearance: none;
         cursor: pointer;
     }
@@ -1042,59 +1043,142 @@ select {
     font-style: italic;
 }
 
-.toggle-switch:disabled { opacity: .55; cursor: wait; }
+.toggle-switch:disabled {
+    opacity: .55;
+    cursor: wait;
+}
 
 // ── Help & Support modal ──────────────────────────────────────────────────────
 .help-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 1500; padding: 1rem;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1500;
+    padding: 1rem;
     animation: help-fade .15s ease;
 }
-@keyframes help-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes help-fade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
 
 .help-modal {
-    background: $card-bg; border: 1px solid $border; border-radius: 16px;
-    padding: 1.75rem; max-width: 440px; width: 100%;
-    box-shadow: 0 30px 60px -10px rgba(0,0,0,.8);
+    background: $card-bg;
+    border: 1px solid $border;
+    border-radius: 16px;
+    padding: 1.75rem;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 30px 60px -10px rgba(0, 0, 0, .8);
     font-family: 'Manrope', sans-serif;
 }
 
 .help-head {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: .35rem;
-    h2 { font-size: 1.2rem; font-weight: 800; color: $text; margin: 0; }
+
+    h2 {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: $text;
+        margin: 0;
+    }
 }
+
 .help-close {
-    background: none; border: none; color: $outline; cursor: pointer;
-    display: flex; align-items: center; padding: 4px; border-radius: 50%;
-    &:hover { color: $text; background: rgba(#fff, .05); }
+    background: none;
+    border: none;
+    color: $outline;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 50%;
+
+    &:hover {
+        color: $text;
+        background: rgba(#fff, .05);
+    }
 }
 
-.help-sub { font-size: .82rem; color: $muted; margin: 0 0 1.25rem; }
+.help-sub {
+    font-size: .82rem;
+    color: $muted;
+    margin: 0 0 1.25rem;
+}
 
-.help-list { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+.help-list {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
 
 .help-row {
-    display: flex; align-items: center; gap: .85rem;
-    padding: .85rem 1rem; border-radius: 10px;
-    border: 1px solid $border; background: rgba($gold, .03);
-    text-decoration: none; color: inherit;
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: .85rem 1rem;
+    border-radius: 10px;
+    border: 1px solid $border;
+    background: rgba($gold, .03);
+    text-decoration: none;
+    color: inherit;
     transition: all .2s;
-    .material-symbols-outlined { color: $gold; font-size: 22px; flex-shrink: 0; }
-    .help-title  { display: block; font-size: .9rem; font-weight: 700; color: $text; }
-    .help-detail { display: block; font-size: .78rem; color: $muted; margin-top: 2px; }
-    &:hover { border-color: rgba($gold, .35); background: rgba($gold, .07); transform: translateY(-1px); }
+
+    .material-symbols-outlined {
+        color: $gold;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .help-title {
+        display: block;
+        font-size: .9rem;
+        font-weight: 700;
+        color: $text;
+    }
+
+    .help-detail {
+        display: block;
+        font-size: .78rem;
+        color: $muted;
+        margin-top: 2px;
+    }
+
+    &:hover {
+        border-color: rgba($gold, .35);
+        background: rgba($gold, .07);
+        transform: translateY(-1px);
+    }
 }
 
 .help-foot {
-    text-align: center; font-size: .72rem; color: $outline;
-    margin: .25rem 0 0; letter-spacing: .04em;
+    text-align: center;
+    font-size: .72rem;
+    color: $outline;
+    margin: .25rem 0 0;
+    letter-spacing: .04em;
 
     .built-by {
         color: $gold;
         margin-left: 4px;
-        strong { font-weight: 800; letter-spacing: 0.06em; }
+
+        strong {
+            font-weight: 800;
+            letter-spacing: 0.06em;
+        }
     }
 }
