@@ -15,7 +15,7 @@ $green: #4CAF8A;
 $orange: #FF6B1A;
 $mtn-yel: #FFC300;
 
-// ── Layout ────────────────────────────────────────────────────────────────────
+
 :host {
   display: flex;
   min-height: 100vh;
@@ -25,7 +25,7 @@ $mtn-yel: #FFC300;
   overflow: hidden;
 }
 
-// ── Sidebar ───────────────────────────────────────────────────────────────────
+
 .sidebar {
   width: 210px;
   min-height: 100vh;
@@ -222,7 +222,7 @@ $mtn-yel: #FFC300;
   }
 }
 
-// ── Main wrapper ──────────────────────────────────────────────────────────────
+
 .main-wrapper {
   flex: 1;
   margin-left: 210px;
@@ -238,7 +238,7 @@ $mtn-yel: #FFC300;
   }
 }
 
-// ── Topbar ────────────────────────────────────────────────────────────────────
+
 .topbar {
   height: 64px;
   background: $dark;
@@ -352,13 +352,13 @@ $mtn-yel: #FFC300;
   font-size: 22px;
 }
 
-// ── Page content ──────────────────────────────────────────────────────────────
+
 .page-content {
   flex: 1;
   overflow-y: auto;
 }
 
-// ── Deposit page ──────────────────────────────────────────────────────────────
+
 .deposit-page {
   width: 100%;
   max-width: 1240px;
@@ -374,22 +374,18 @@ $mtn-yel: #FFC300;
   @media (min-width: 1000px) {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
 
-    /* Default every direct child to the left (form) column. The
-       ng-container in deposit.html doesn't render an element, so
-       section-label / provider-grid / deposit-form are all direct
-       children of .deposit-page and need to land on the left. */
+    
     >* {
       grid-column: 1;
     }
 
-    /* Header and state-card (success/processing) span both columns. */
+    
     .deposit-header,
     .state-card {
       grid-column: 1 / -1;
     }
 
-    /* Balance card lives in the right column, anchored to row 2 and
-       sticky so it stays visible as the form scrolls. */
+    
     .balance-card {
       grid-column: 2;
       grid-row: 2;

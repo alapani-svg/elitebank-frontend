@@ -67,7 +67,7 @@
   <main class="page-content">
     <div class="deposit-page">
 
-      <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
+      
       <div class="deposit-header">
         <a class="back-btn" routerLink="/transactions">
           <span class="material-symbols-outlined">arrow_back</span>
@@ -87,7 +87,7 @@
         </div>
       </div>
 
-      <!-- ── BALANCE CARD ───────────────────────────────────────────────────── -->
+      
       <div class="balance-card" *ngIf="user">
         <span class="balance-label">CURRENT BALANCE</span>
         <span class="balance-value">
@@ -95,12 +95,9 @@
         </span>
       </div>
 
-      <!-- ════════════════════════════════════════════════════════════════════ -->
-      <!-- STEP: FORM                                                          -->
-      <!-- ════════════════════════════════════════════════════════════════════ -->
       <ng-container *ngIf="step === 'form'">
 
-        <!-- Provider selection -->
+        
         <div class="section-label">Choose Provider</div>
         <div class="provider-grid">
 
@@ -132,10 +129,10 @@
 
         </div>
 
-        <!-- Form -->
+        
         <form [formGroup]="form" (ngSubmit)="submit()" class="deposit-form" novalidate>
 
-          <!-- Amount -->
+          
           <div class="field-group">
             <label class="field-label">Amount</label>
             <div class="input-with-suffix">
@@ -149,7 +146,7 @@
             </div>
           </div>
 
-          <!-- Quick-amount pills -->
+          
           <div class="quick-amounts">
             <button type="button" class="quick-btn" *ngFor="let q of quickAmounts"
               [class.active]="form.value.amount == q" (click)="setAmount(q)">
@@ -157,7 +154,7 @@
             </button>
           </div>
 
-          <!-- Phone -->
+          
           <div class="field-group">
             <label class="field-label">Mobile Number</label>
             <div class="input-with-prefix">
@@ -178,7 +175,7 @@
             </p>
           </div>
 
-          <!-- Summary row -->
+          
           <div class="summary-row" *ngIf="form.value.amount >= 100 && form.value.phone">
             <span class="material-symbols-outlined summary-icon" [class.orange-text]="selectedProvider === 'orange'"
               [class.mtn-text]="selectedProvider === 'mtn'">arrow_circle_down</span>
@@ -188,7 +185,7 @@
             </span>
           </div>
 
-          <!-- Submit -->
+          
           <button type="submit" class="submit-btn" [disabled]="form.invalid">
             <span class="material-symbols-outlined">bolt</span> Recharge Now
           </button>
@@ -196,9 +193,9 @@
         </form>
       </ng-container>
 
-      <!-- ════════════════════════════════════════════════════════════════════ -->
-      <!-- STEP: PROCESSING                                                    -->
-      <!-- ════════════════════════════════════════════════════════════════════ -->
+      
+      
+      
       <div class="state-card" *ngIf="step === 'processing'">
         <div class="state-spinner"></div>
         <h2 class="state-title">Processing Payment</h2>
@@ -219,10 +216,6 @@
           </div>
         </div>
       </div>
-
-      <!-- ════════════════════════════════════════════════════════════════════ -->
-      <!-- STEP: SUCCESS                                                       -->
-      <!-- ════════════════════════════════════════════════════════════════════ -->
       <div class="state-card" *ngIf="step === 'success'">
         <div class="success-icon"><span class="material-symbols-outlined">check</span></div>
         <h2 class="state-title success-title">Recharge Successful!</h2>
@@ -244,10 +237,6 @@
           </button>
         </div>
       </div>
-
-      <!-- ════════════════════════════════════════════════════════════════════ -->
-      <!-- STEP: ERROR                                                         -->
-      <!-- ════════════════════════════════════════════════════════════════════ -->
       <div class="state-card" *ngIf="step === 'error'">
         <div class="error-icon"><span class="material-symbols-outlined">close</span></div>
         <h2 class="state-title error-title">Payment Failed</h2>

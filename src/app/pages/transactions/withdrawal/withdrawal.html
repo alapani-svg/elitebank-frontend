@@ -92,7 +92,7 @@
         </span>
       </div>
 
-      <!-- STEP: FORM -->
+      
       <ng-container *ngIf="step === 'form'">
 
         <div class="section-label">Choose Provider</div>
@@ -180,14 +180,14 @@
         </form>
       </ng-container>
 
-      <!-- STEP: PROCESSING -->
+      
       <div class="state-card" *ngIf="step === 'processing'">
         <div class="state-spinner"></div>
         <h2 class="state-title">Processing Withdrawal</h2>
         <p class="state-sub">Transferring funds to your {{ providerLabel }} account…</p>
       </div>
 
-      <!-- STEP: SUCCESS -->
+      
       <div class="state-card" *ngIf="step === 'success'">
         <div class="success-icon"><span class="material-symbols-outlined">check</span></div>
         <h2 class="state-title success-title">Withdrawal Complete!</h2>
@@ -211,7 +211,7 @@
         </div>
       </div>
 
-      <!-- STEP: ERROR -->
+      
       <div class="state-card" *ngIf="step === 'error'">
         <div class="error-icon"><span class="material-symbols-outlined">close</span></div>
         <h2 class="state-title error-title">Withdrawal Failed</h2>

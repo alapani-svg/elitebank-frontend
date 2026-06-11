@@ -63,7 +63,7 @@ export class Transfer implements OnInit {
   loadBeneficiaries(): void {
     this.bService.list('TRANSFER').subscribe({
       next: (list) => this.beneficiaries = list,
-      error: () => { /* non-critical */ },
+      error: () => {  },
     });
   }
 
@@ -89,7 +89,7 @@ export class Transfer implements OnInit {
         this.loading = false;
         this.success = 'Transfer successful!';
         this.lastTransferIdentifier = identifier;
-        // Show "save beneficiary" prompt only if it's not already saved
+        
         this.showSavePrompt = !this.beneficiaries.some(b => b.identifier === identifier);
         this.form.reset();
         this.userService.getProfile().subscribe({ next: (u) => this.user = u });

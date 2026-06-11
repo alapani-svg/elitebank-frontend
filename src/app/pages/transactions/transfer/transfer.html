@@ -67,7 +67,7 @@
   <main class="page-content">
     <div class="transfer-page">
 
-      <!-- Header -->
+      
       <div class="transfer-header">
         <a routerLink="/transactions" class="back-btn">
           <span class="material-symbols-outlined">arrow_back</span>
@@ -87,23 +87,23 @@
         </div>
       </div>
 
-      <!-- Balance card -->
+      
       <div class="balance-card" *ngIf="user">
         <span class="balance-label">{{ 'transfer.availableBalance' | t }}</span>
         <span class="balance-value">{{ user.balance_xaf | number:'1.2-2' }} <span class="currency">XAF</span></span>
       </div>
 
-      <!-- Global error -->
+      
       <div class="alert-error" *ngIf="error">
         <span class="material-symbols-outlined">error</span> {{ error }}
       </div>
 
-      <!-- Success -->
+      
       <div class="alert-success" *ngIf="success">
         <span class="material-symbols-outlined">check_circle</span> {{ success }}
       </div>
 
-      <!-- Save Beneficiary prompt -->
+      
       <div class="save-beneficiary-card" *ngIf="showSavePrompt">
         <div class="save-head">
           <span class="material-symbols-outlined">bookmark_add</span>
@@ -120,7 +120,7 @@
         <div class="save-success" *ngIf="saveSuccess">{{ saveSuccess }}</div>
       </div>
 
-      <!-- Saved beneficiaries quick-pick -->
+      
       <div class="beneficiary-strip" *ngIf="beneficiaries.length > 0 && !success">
         <span class="strip-label">{{ 'transfer.savedRecipients' | t }}</span>
         <div class="chips">
@@ -131,10 +131,10 @@
         </div>
       </div>
 
-      <!-- Form -->
+      
       <form [formGroup]="form" (ngSubmit)="submit()" class="transfer-form" novalidate>
 
-        <!-- Recipient -->
+        
         <div class="field-group">
           <label class="field-label" for="recipient">{{ 'transfer.recipientLabel' | t }}</label>
           <input id="recipient" type="text" class="field-input"
@@ -150,7 +150,7 @@
           </div>
         </div>
 
-        <!-- Amount -->
+        
         <div class="field-group">
           <label class="field-label" for="amount">{{ 'transfer.amountLabel' | t }}</label>
           <div class="input-with-suffix">
@@ -170,7 +170,7 @@
           </div>
         </div>
 
-        <!-- Description -->
+        
         <div class="field-group">
           <label class="field-label" for="description">{{ 'transfer.descriptionLabel' | t }} <span class="optional">{{
               'transfer.descriptionOptional' | t }}</span></label>
@@ -178,7 +178,7 @@
             [placeholder]="'transfer.descriptionPlaceholder' | t">
         </div>
 
-        <!-- Submit -->
+        
         <button type="submit" class="submit-btn" [disabled]="loading || form.invalid">
           <span *ngIf="!loading">
             <span class="material-symbols-outlined">send</span> {{ 'transfer.sendTransfer' | t }}
