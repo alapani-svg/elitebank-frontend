@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" role="img" aria-labelledby="title desc">
+  <title id="title">Elite Bank logo</title>
+  <desc id="desc">A premium gold emblem with a sharp monogram for Elite Bank.</desc>
+  <defs>
+    <linearGradient id="goldA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7C948"/>
+      <stop offset="45%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#A67C1A"/>
+    </linearGradient>
+    <linearGradient id="goldB" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F3D464"/>
+      <stop offset="100%" stop-color="#C99F24"/>
+    </linearGradient>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="320" height="64" fill="none"/>
+  <g transform="translate(10 7)">
+    <path d="M0 14 L12 0 H34 L46 14 V38 C46 44 40 50 34 50 H12 C6 50 0 44 0 38 V14 Z" fill="url(#goldA)" filter="url(#softGlow)"/>
+    <path d="M10 14 L22 4 L34 14 V32 C34 38 28 44 22 44 C16 44 10 38 10 32 V14 Z" fill="url(#goldB)"/>
+    <path d="M15 30 L27 30 L27 42 C27 44.2 25.2 46 23 46 C20.8 46 19 44.2 19 42 L19 34 L15 34 Z" fill="#12110F" opacity="0.18"/>
+    <path d="M32 30 L44 30 L44 42 C44 44.2 42.2 46 40 46 C37.8 46 36 44.2 36 42 L36 34 L32 34 Z" fill="#12110F" opacity="0.18"/>
+    <path d="M22 6 L30 18 L22 30 L14 18 L22 6 Z" fill="#12110F" opacity="0.08"/>
+    <path d="M14 18 L22 30 L30 18" fill="#fff" opacity="0.1"/>
+    <path d="M12 14 L22 26 L32 14" fill="#fff" opacity="0.12"/>
+    <path d="M8 18 L38 18" stroke="#ffffff" stroke-width="1.2" opacity="0.15"/>
+  </g>
+  <g transform="translate(74 12)">
+    <text x="0" y="24" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" font-weight="900" letter-spacing="-0.04em" fill="#FFFFFF">ELITE</text>
+    <path d="M0 30 H64" stroke="#F7C948" stroke-width="1.5" opacity="0.32"/>
+  </g>
+</svg>
