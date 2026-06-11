@@ -79,6 +79,14 @@
         </div>
       </div>
 
+      <div class="info-card">
+        <span class="material-symbols-outlined">tips_and_updates</span>
+        <div>
+          Enter the recipient email or phone tied to their Elite Bank account. When your credentials are valid,
+          transfers complete quickly and your balance updates automatically.
+        </div>
+      </div>
+
       <!-- Balance card -->
       <div class="balance-card" *ngIf="user">
         <span class="balance-label">{{ 'transfer.availableBalance' | t }}</span>
@@ -129,15 +137,12 @@
         <!-- Recipient -->
         <div class="field-group">
           <label class="field-label" for="recipient">{{ 'transfer.recipientLabel' | t }}</label>
-          <input
-            id="recipient"
-            type="text"
-            class="field-input"
+          <input id="recipient" type="text" class="field-input"
             [class.is-invalid]="f['recipient_identifier'].invalid && f['recipient_identifier'].touched || fieldErrors['recipient_identifier']"
-            formControlName="recipient_identifier"
-            [placeholder]="'transfer.recipientPlaceholder' | t"
+            formControlName="recipient_identifier" [placeholder]="'transfer.recipientPlaceholder' | t"
             autocomplete="off">
-          <div class="field-error" *ngIf="f['recipient_identifier'].touched && f['recipient_identifier'].hasError('required')">
+          <div class="field-error"
+            *ngIf="f['recipient_identifier'].touched && f['recipient_identifier'].hasError('required')">
             {{ 'common.required' | t }}
           </div>
           <div class="field-error" *ngIf="fieldErrors['recipient_identifier']">
@@ -149,14 +154,9 @@
         <div class="field-group">
           <label class="field-label" for="amount">{{ 'transfer.amountLabel' | t }}</label>
           <div class="input-with-suffix">
-            <input
-              id="amount"
-              type="number"
-              class="field-input"
+            <input id="amount" type="number" class="field-input"
               [class.is-invalid]="f['amount'].invalid && f['amount'].touched || fieldErrors['amount']"
-              formControlName="amount"
-              [placeholder]="'transfer.amountPlaceholder' | t"
-              min="100">
+              formControlName="amount" [placeholder]="'transfer.amountPlaceholder' | t" min="100">
             <span class="input-suffix">XAF</span>
           </div>
           <div class="field-error" *ngIf="f['amount'].touched && f['amount'].hasError('required')">
@@ -172,12 +172,9 @@
 
         <!-- Description -->
         <div class="field-group">
-          <label class="field-label" for="description">{{ 'transfer.descriptionLabel' | t }} <span class="optional">{{ 'transfer.descriptionOptional' | t }}</span></label>
-          <input
-            id="description"
-            type="text"
-            class="field-input"
-            formControlName="description"
+          <label class="field-label" for="description">{{ 'transfer.descriptionLabel' | t }} <span class="optional">{{
+              'transfer.descriptionOptional' | t }}</span></label>
+          <input id="description" type="text" class="field-input" formControlName="description"
             [placeholder]="'transfer.descriptionPlaceholder' | t">
         </div>
 

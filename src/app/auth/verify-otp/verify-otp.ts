@@ -18,6 +18,8 @@ export class VerifyOtp implements OnInit, OnDestroy {
   challengeId    = '';
   maskedEmail    = '';
   registeredEmail = '';
+  purpose: 'register' | 'login' = 'register';
+  returnUrl = '/dashboard';
 
   loading = false;
   error   = '';
@@ -35,15 +37,18 @@ export class VerifyOtp implements OnInit, OnDestroy {
   ngOnInit(): void {
     const navState = (history.state || {}) as {
       challenge_id?: string; masked_email?: string; email?: string;
+      purpose?: 'register' | 'login'; returnUrl?: string;
     };
     const qp = this.route.snapshot.queryParamMap;
 
     this.challengeId     = navState.challenge_id  || qp.get('challenge_id')  || '';
     this.maskedEmail     = navState.masked_email  || qp.get('masked_email')  || '';
     this.registeredEmail = navState.email         || qp.get('email')         || '';
+    this.purpose         = navState.purpose       || (qp.get('purpose') as 'register' | 'login') || 'register';
+    this.returnUrl       = navState.returnUrl     || qp.get('returnUrl')     || '/dashboard';
 
     if (!this.challengeId) {
-      this.router.navigate(['/register']);
+      this.router.navigate([this.purpose === 'login' ? '/login' : '/register']);
       return;
     }
 
@@ -65,13 +70,21 @@ export class VerifyOtp implements OnInit, OnDestroy {
     this.loading = true;
     this.error   = '';
 
-    this.auth.verifyRegistration(this.challengeId, this.otpForm.value.code).subscribe({
+    const request = this.purpose === 'login'
+      ? this.auth.verifyLoginOtp(this.challengeId, this.otpForm.value.code)
+      : this.auth.verifyRegistration(this.challengeId, this.otpForm.value.code);
+
+    request.subscribe({
       next: () => {
         this.loading = false;
         this.stopResendCooldown();
-        this.router.navigate(['/login'], {
-          queryParams: { verified: '1', email: this.registeredEmail },
-        });
+        if (this.purpose === 'login') {
+          this.router.navigate([this.returnUrl]);
+        } else {
+          this.router.navigate(['/login'], {
+            queryParams: { verified: '1', email: this.registeredEmail },
+          });
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
@@ -82,9 +95,14 @@ export class VerifyOtp implements OnInit, OnDestroy {
   }
 
   resend(): void {
-    if (this.resendCooldown > 0 || this.loading || !this.registeredEmail) return;
+    if (this.resendCooldown > 0 || this.loading) return;
+    if (this.purpose === 'register' && !this.registeredEmail) return;
     this.error = '';
-    this.auth.resendRegistrationOtp(this.registeredEmail).subscribe({
+    const request = this.purpose === 'login'
+      ? this.auth.resendLoginOtp(this.challengeId)
+      : this.auth.resendRegistrationOtp(this.registeredEmail);
+
+    request.subscribe({
       next: (res) => {
         if (res.challenge_id) this.challengeId = res.challenge_id;
         if (res.masked_email) this.maskedEmail = res.masked_email;
@@ -97,7 +115,7 @@ export class VerifyOtp implements OnInit, OnDestroy {
   }
 
   cancel(): void {
-    this.router.navigate(['/register']);
+    this.router.navigate([this.purpose === 'login' ? '/login' : '/register']);
   }
 
   private startResendCooldown(seconds: number): void {

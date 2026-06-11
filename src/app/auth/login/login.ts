@@ -61,8 +61,20 @@ export class Login implements OnInit {
     this.serverError = '';
 
     this.auth.login(this.loginForm.value).subscribe({
-      next: () => {
+      next: (res) => {
         this.isLoading = false;
+        if ('requires_otp' in res && res.requires_otp) {
+          this.router.navigate(['/verify-otp'], {
+            state: {
+              challenge_id: res.challenge_id,
+              masked_email: res.masked_email,
+              email: res.email,
+              purpose: 'login',
+              returnUrl: this.returnUrl,
+            },
+          });
+          return;
+        }
         this.router.navigate([this.returnUrl]);
       },
       error: (err: HttpErrorResponse) => {

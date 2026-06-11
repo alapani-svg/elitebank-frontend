@@ -17,10 +17,10 @@
       <div class="shield-icon">
         <span class="material-symbols-outlined">mark_email_read</span>
       </div>
-      <h1>Verify your email</h1>
+      <h1>{{ purpose === 'login' ? 'Verify your sign-in' : 'Verify your email' }}</h1>
       <p class="sub">
         We've sent a 6-digit code to <strong>{{ maskedEmail || registeredEmail }}</strong>.
-        Enter it below to activate your account.
+        Enter it below to {{ purpose === 'login' ? 'finish signing in' : 'activate your account' }}.
       </p>
     </div>
 
@@ -59,7 +59,7 @@
 
       <div class="verify-actions">
         <button type="button" class="text-link" (click)="cancel()">
-          Use a different account
+          {{ purpose === 'login' ? 'Back to login' : 'Use a different account' }}
         </button>
         <button type="button" class="text-link"
                 [disabled]="resendCooldown > 0 || loading"

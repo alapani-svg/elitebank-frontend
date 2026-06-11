@@ -41,6 +41,15 @@ export interface AuthResponse {
   tokens: AuthTokens;
 }
 
+export interface OtpRequiredResponse {
+  message: string;
+  requires_otp: true;
+  purpose: 'login';
+  challenge_id: string;
+  masked_email: string;
+  email: string;
+}
+
 /** Server response from POST /api/auth/register/ — user is created but
  *  unverified, an email OTP has been sent. The frontend must POST the
  *  6-digit code to /api/auth/register/verify/ to receive JWT tokens. */
@@ -95,9 +104,25 @@ export class AuthService {
     );
   }
 
-  login(payload: LoginPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.api}/api/auth/login/`, payload)
-      .pipe(tap(res => this.storeTokens(res.tokens)));
+  login(payload: LoginPayload): Observable<AuthResponse | OtpRequiredResponse> {
+    return this.http.post<AuthResponse | OtpRequiredResponse>(`${this.api}/api/auth/login/`, payload)
+      .pipe(tap(res => {
+        if ('tokens' in res) this.storeTokens(res.tokens);
+      }));
+  }
+
+  verifyLoginOtp(challenge_id: string, code: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(
+      `${this.api}/api/auth/2fa/verify/`,
+      { challenge_id, code },
+    ).pipe(tap(res => this.storeTokens(res.tokens)));
+  }
+
+  resendLoginOtp(challenge_id: string): Observable<{ message: string; challenge_id: string; masked_email: string }> {
+    return this.http.post<{ message: string; challenge_id: string; masked_email: string }>(
+      `${this.api}/api/auth/2fa/resend/`,
+      { challenge_id },
+    );
   }
 
   // Refresh — POST /api/auth/token/refresh/

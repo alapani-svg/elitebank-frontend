@@ -77,6 +77,14 @@
         </div>
       </div>
 
+      <div class="info-card">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <div>
+          Choose your mobile money provider and enter the correct number. When withdrawal credentials are valid, the
+          transfer is processed quickly and your available balance updates after completion.
+        </div>
+      </div>
+
       <div class="balance-card" *ngIf="user">
         <span class="balance-label">AVAILABLE BALANCE</span>
         <span class="balance-value">
@@ -89,9 +97,8 @@
 
         <div class="section-label">Choose Provider</div>
         <div class="provider-grid">
-          <button type="button" class="provider-card"
-                  [class.selected]="selectedProvider === 'orange'"
-                  (click)="selectProvider('orange')">
+          <button type="button" class="provider-card" [class.selected]="selectedProvider === 'orange'"
+            (click)="selectProvider('orange')">
             <div class="provider-icon orange-icon">
               <span class="material-symbols-outlined">smartphone</span>
             </div>
@@ -100,12 +107,11 @@
               <span class="provider-hint">06x · 069 numbers</span>
             </div>
             <span class="material-symbols-outlined provider-check"
-               *ngIf="selectedProvider === 'orange'">check_circle</span>
+              *ngIf="selectedProvider === 'orange'">check_circle</span>
           </button>
 
-          <button type="button" class="provider-card"
-                  [class.selected]="selectedProvider === 'mtn'"
-                  (click)="selectProvider('mtn')">
+          <button type="button" class="provider-card" [class.selected]="selectedProvider === 'mtn'"
+            (click)="selectProvider('mtn')">
             <div class="provider-icon mtn-icon">
               <span class="material-symbols-outlined">smartphone</span>
             </div>
@@ -114,7 +120,7 @@
               <span class="provider-hint">067 · 068 numbers</span>
             </div>
             <span class="material-symbols-outlined provider-check"
-               *ngIf="selectedProvider === 'mtn'">check_circle</span>
+              *ngIf="selectedProvider === 'mtn'">check_circle</span>
           </button>
         </div>
 
@@ -124,11 +130,8 @@
             <label class="field-label">Amount</label>
             <div class="input-with-suffix">
               <input class="field-input"
-                     [class.is-invalid]="f['amount'].invalid && f['amount'].touched || insufficientFunds"
-                     type="number"
-                     formControlName="amount"
-                     placeholder="1 000"
-                     min="500" />
+                [class.is-invalid]="f['amount'].invalid && f['amount'].touched || insufficientFunds" type="number"
+                formControlName="amount" placeholder="1 000" min="500" />
               <span class="input-suffix">XAF</span>
             </div>
             <div class="field-error" *ngIf="f['amount'].invalid && f['amount'].touched">
@@ -141,10 +144,8 @@
           </div>
 
           <div class="quick-amounts">
-            <button type="button" class="quick-btn"
-                    *ngFor="let q of quickAmounts"
-                    [class.active]="form.value.amount == q"
-                    (click)="setAmount(q)">
+            <button type="button" class="quick-btn" *ngFor="let q of quickAmounts"
+              [class.active]="form.value.amount == q" (click)="setAmount(q)">
               {{ q | number:'1.0-0' }}
             </button>
           </div>
@@ -153,11 +154,8 @@
             <label class="field-label">Mobile Money Number</label>
             <div class="input-with-prefix">
               <span class="input-prefix"><span class="material-symbols-outlined">phone</span></span>
-              <input class="field-input prefix-pad"
-                     [class.is-invalid]="f['phone'].invalid && f['phone'].touched"
-                     type="tel"
-                     formControlName="phone"
-                     placeholder="+237 670 000 001" />
+              <input class="field-input prefix-pad" [class.is-invalid]="f['phone'].invalid && f['phone'].touched"
+                type="tel" formControlName="phone" placeholder="+237 670 000 001" />
             </div>
             <div class="field-error" *ngIf="f['phone'].invalid && f['phone'].touched">
               <span *ngIf="f['phone'].errors?.['required']">Phone number is required.</span>
