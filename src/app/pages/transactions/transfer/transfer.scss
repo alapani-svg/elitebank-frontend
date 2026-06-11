@@ -371,19 +371,19 @@ $green: #4CAF8A;
   @media (min-width: 1000px) {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
 
-    
+
     >* {
       grid-column: 1;
     }
 
-    
+
     .transfer-header,
     .alert-error,
     .alert-success {
       grid-column: 1 / -1;
     }
 
-    
+
     .balance-card {
       grid-column: 2;
       grid-row: 2;
@@ -520,6 +520,13 @@ $green: #4CAF8A;
   font-size: 1.65rem;
   font-weight: 800;
   color: $gold-dim;
+}
+
+.balance-insight {
+  font-size: .88rem;
+  color: $muted;
+  line-height: 1.5;
+  margin-top: .4rem;
 }
 
 .currency {

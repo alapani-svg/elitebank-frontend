@@ -373,18 +373,18 @@ $mtn-yel: #FFC300;
   @media (min-width: 1000px) {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
 
-    
+
     >* {
       grid-column: 1;
     }
 
-    
+
     .withdraw-header,
     .state-card {
       grid-column: 1 / -1;
     }
 
-    
+
     .balance-card {
       grid-column: 2;
       grid-row: 2;
@@ -519,6 +519,13 @@ $mtn-yel: #FFC300;
     color: $muted;
     margin-left: .25rem;
   }
+}
+
+.balance-insight {
+  font-size: .85rem;
+  color: $muted;
+  line-height: 1.5;
+  margin-top: .35rem;
 }
 
 .section-label {

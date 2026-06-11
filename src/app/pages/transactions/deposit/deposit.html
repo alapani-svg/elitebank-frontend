@@ -67,7 +67,7 @@
   <main class="page-content">
     <div class="deposit-page">
 
-      
+
       <div class="deposit-header">
         <a class="back-btn" routerLink="/transactions">
           <span class="material-symbols-outlined">arrow_back</span>
@@ -87,17 +87,19 @@
         </div>
       </div>
 
-      
+
       <div class="balance-card" *ngIf="user">
         <span class="balance-label">CURRENT BALANCE</span>
         <span class="balance-value">
           {{ user.balance_xaf | number:'1.0-0' }}<span class="currency"> XAF</span>
         </span>
+        <span class="balance-insight">Available balance after recharge, ready for transfers, bills, or
+          withdrawals.</span>
       </div>
 
       <ng-container *ngIf="step === 'form'">
 
-        
+
         <div class="section-label">Choose Provider</div>
         <div class="provider-grid">
 
@@ -129,10 +131,10 @@
 
         </div>
 
-        
+
         <form [formGroup]="form" (ngSubmit)="submit()" class="deposit-form" novalidate>
 
-          
+
           <div class="field-group">
             <label class="field-label">Amount</label>
             <div class="input-with-suffix">
@@ -146,7 +148,7 @@
             </div>
           </div>
 
-          
+
           <div class="quick-amounts">
             <button type="button" class="quick-btn" *ngFor="let q of quickAmounts"
               [class.active]="form.value.amount == q" (click)="setAmount(q)">
@@ -154,7 +156,7 @@
             </button>
           </div>
 
-          
+
           <div class="field-group">
             <label class="field-label">Mobile Number</label>
             <div class="input-with-prefix">
@@ -175,7 +177,7 @@
             </p>
           </div>
 
-          
+
           <div class="summary-row" *ngIf="form.value.amount >= 100 && form.value.phone">
             <span class="material-symbols-outlined summary-icon" [class.orange-text]="selectedProvider === 'orange'"
               [class.mtn-text]="selectedProvider === 'mtn'">arrow_circle_down</span>
@@ -185,7 +187,7 @@
             </span>
           </div>
 
-          
+
           <button type="submit" class="submit-btn" [disabled]="form.invalid">
             <span class="material-symbols-outlined">bolt</span> Recharge Now
           </button>
@@ -193,9 +195,9 @@
         </form>
       </ng-container>
 
-      
-      
-      
+
+
+
       <div class="state-card" *ngIf="step === 'processing'">
         <div class="state-spinner"></div>
         <h2 class="state-title">Processing Payment</h2>
